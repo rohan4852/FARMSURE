@@ -1,0 +1,194 @@
+/* Global Styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    padding: 2rem 0;
+}
+
+/* Navigation Styles */
+.navbar {
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Profile Styles */
+.profile-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    padding: 3px;
+}
+
+/* Chat Styles */
+.chat-container {
+    height: 400px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.message {
+    margin-bottom: 1rem;
+    max-width: 70%;
+}
+
+.message.sent {
+    margin-left: auto;
+}
+
+.message.received {
+    margin-right: auto;
+}
+
+.message-content {
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: #f8f9fa;
+}
+
+.message.sent .message-content {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Message styles */
+.message-item {
+    padding: 1rem 0;
+}
+
+.message-item:not(:last-child) {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.message-link {
+    color: #212529;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.message-link:hover {
+    color: #0d6efd;
+}
+
+.message-meta {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.message-content {
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    white-space: pre-wrap;
+}
+
+/* Dashboard Styles */
+.dashboard-card {
+    transition: transform 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Contract Styles */
+.contract-status {
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #ffc107;
+}
+
+.status-active {
+    color: #28a745;
+}
+
+.status-completed {
+    color: #17a2b8;
+}
+
+.status-cancelled {
+    color: #dc3545;
+}
+
+/* Layout styles */
+.logout-form {
+    display: inline;
+}
+
+/* Bid styles */
+.contract-details {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.budget-info {
+    font-size: 1.1rem;
+    color: #198754;
+    margin-top: 1rem;
+}
+
+.proposal {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.bid-amount {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #198754;
+}

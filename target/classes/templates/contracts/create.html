@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layout/main :: head">
+    <title>Create Contract - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="layout/main :: navbar"></nav>
+
+    <!-- Sidebar -->
+    <div th:replace="layout/main :: sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Create New Contract</h1>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form th:action="@{/contracts}" method="post" th:object="${contract}">
+                                <div class="mb-3">
+                                    <label class="form-label">Contract Title</label>
+                                    <input type="text" class="form-control" th:field="*{title}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" th:field="*{description}" rows="4"
+                                        required></textarea>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Product</label>
+                                        <select class="form-select" th:field="*{product}" required>
+                                            <option value="">Select Product</option>
+                                            <option value="WHEAT">Wheat</option>
+                                            <option value="CORN">Corn</option>
+                                            <option value="SOYBEANS">Soybeans</option>
+                                            <option value="RICE">Rice</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Quantity (tons)</label>
+                                        <input type="number" class="form-control" th:field="*{quantity}" required
+                                            min="1">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Base Price (per ton)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" th:field="*{basePrice}" required
+                                                step="0.01" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Quality Grade Required</label>
+                                        <select class="form-select" th:field="*{qualityGrade}" required>
+                                            <option value="">Select Grade</option>
+                                            <option value="A">Grade A (Premium)</option>
+                                            <option value="B">Grade B (Standard)</option>
+                                            <option value="C">Grade C (Basic)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Bidding End Date</label>
+                                        <input type="date" class="form-control" th:field="*{biddingEndDate}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Delivery Date</label>
+                                        <input type="date" class="form-control" th:field="*{deliveryDate}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Terms & Conditions</label>
+                                    <textarea class="form-control" th:field="*{terms}" rows="4" required></textarea>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="history.back()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Create Contract</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Contract Guidelines</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Clearly specify product requirements
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Set realistic delivery timelines
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Include quality standards
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Define payment terms clearly
+                                </li>
+                            </ul>
+
+                            <hr>
+
+                            <h5 class="card-title">Market Insights</h5>
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">Current Market Prices:</small>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Wheat:</span>
+                                    <span class="text-success">$320/ton</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Corn:</span>
+                                    <span class="text-success">$280/ton</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Soybeans:</span>
+                                    <span class="text-success">$450/ton</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="layout/main :: footer"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="layout/main :: scripts"></div>
+
+    <!-- Date Validation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const biddingEndDate = document.querySelector('[name="biddingEndDate"]');
+            const deliveryDate = document.querySelector('[name="deliveryDate"]');
+
+            form.addEventListener('submit', function (e) {
+                const today = new Date();
+                const bidding = new Date(biddingEndDate.value);
+                const delivery = new Date(deliveryDate.value);
+
+                if (bidding <= today) {
+                    e.preventDefault();
+                    alert('Bidding end date must be in the future');
+                }
+
+                if (delivery <= bidding) {
+                    e.preventDefault();
+                    alert('Delivery date must be after bidding end date');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

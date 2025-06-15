@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layout/main :: head">
+    <title>Available Contracts - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="layout/main :: navbar"></nav>
+
+    <!-- Sidebar -->
+    <div th:replace="layout/main :: sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Available Contracts</h1>
+                <div class="d-flex">
+                    <div class="input-group me-2">
+                        <input type="text" class="form-control" placeholder="Search contracts...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            Filter by
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">All Products</a></li>
+                            <li><a class="dropdown-item" href="#">Wheat</a></li>
+                            <li><a class="dropdown-item" href="#">Corn</a></li>
+                            <li><a class="dropdown-item" href="#">Soybeans</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contracts Grid -->
+            <div class="row">
+                <div th:each="contract : ${contracts}" class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title" th:text="${contract.title}">Contract Title</h5>
+                                <span class="badge bg-primary" th:text="${contract.status}">Active</span>
+                            </div>
+                            <p class="card-text" th:text="${contract.description}">Contract description goes here...</p>
+                            <div class="mb-3">
+                                <small class="text-muted">Product Details:</small>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-seedling me-2"></i> Product: <span
+                                            th:text="${contract.product}">Wheat</span></li>
+                                    <li><i class="fas fa-weight me-2"></i> Quantity: <span
+                                            th:text="${contract.quantity}">1000</span> tons</li>
+                                    <li><i class="fas fa-dollar-sign me-2"></i> Base Price: $<span
+                                            th:text="${contract.basePrice}">300</span>/ton</li>
+                                </ul>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Timeline:</small>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-calendar-alt me-2"></i> Bidding Ends: <span
+                                            th:text="${#temporals.format(contract.biddingEndDate, 'MMM dd, yyyy')}">Jun
+                                            30, 2025</span></li>
+                                    <li><i class="fas fa-truck me-2"></i> Delivery By: <span
+                                            th:text="${#temporals.format(contract.deliveryDate, 'MMM dd, yyyy')}">Dec
+                                            31, 2025</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    th:data-bs-target="'#bidModal' + ${contract.id}">
+                                    <i class="fas fa-gavel me-2"></i>Place Bid
+                                </button>
+                                <button class="btn btn-outline-secondary"
+                                    th:onclick="'window.location.href=\'/contracts/' + ${contract.id} + '\''">
+                                    <i class="fas fa-info-circle me-2"></i>Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bid Modal -->
+                    <div class="modal fade" th:id="'bidModal' + ${contract.id}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Place Bid</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form th:action="@{/contracts/{id}/bid(id=${contract.id})}" method="post">
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Bid Amount (per ton)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" name="amount" required
+                                                    step="0.01">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Proposal/Notes</label>
+                                            <textarea class="form-control" name="proposal" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Submit Bid</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(contracts)}" class="text-center py-5">
+                <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                <h3>No Contracts Available</h3>
+                <p class="text-muted">Check back later for new contract opportunities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="layout/main :: footer"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>
