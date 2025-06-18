@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="layout/main :: head">
+    <title>Active Contracts - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="layout/main :: navbar"></nav>
+
+    <!-- Sidebar -->
+    <div th:replace="layout/main :: sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Active Contracts Available for Bidding</h1>
+
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Contract ID</th>
+                                    <th>Product</th>
+                                    <th>Merchant</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="contract : ${availableContracts}">
+                                    <td th:text="${contract.id}">#12345</td>
+                                    <td th:text="${contract.product.name}">Wheat</td>
+                                    <td th:text="${contract.merchant.username}">AgriCorp Ltd</td>
+                                    <td>
+                                        <span
+                                            th:classappend="${contract.status == 'OPEN'} ? 'badge bg-success' : 'badge bg-secondary'"
+                                            th:text="${contract.status}">Open</span>
+                                    </td>
+                                    <td th:text="${#numbers.formatDecimal(contract.amount, 0, 'COMMA', 2, 'POINT')}">
+                                        $0.00</td>
+                                    <td>
+                                        <a th:href="@{'/contracts/' + ${contract.id} + '/bid'}"
+                                            class="btn btn-primary btn-sm">Bid</a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(availableContracts)}">
+                                    <td colspan="6" class="text-center">No active contracts available for bidding.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="layout/main :: footer"></div>
+
+    <!-- Scripts -->
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>

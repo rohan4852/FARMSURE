@@ -39,7 +39,7 @@
             left: 0;
             height: 100vh;
             width: 250px;
-            background: var(--dark-color);
+            background: var(--sidebar-bg);
             padding-top: 60px;
             transition: all 0.3s ease;
             z-index: 1000;
@@ -70,19 +70,67 @@
         .main-content {
             margin-left: 250px;
             padding: 20px;
-            min-height: calc(100vh - 60px);
+            min-height: calc(100vh - 120px);
+            /* Adjust for navbar and footer */
             transition: all 0.3s ease;
+            padding-bottom: 60px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: fixed;
+            bottom: 0;
+            width: calc(100% - 250px);
+            margin-left: 250px;
+            z-index: 1000;
+            color: var(--text-primary);
+        }
+
+        .footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer a:hover {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        .footer p {
+            color: var(--text-primary);
+            margin: 0;
         }
 
         /* Navbar */
         .navbar {
-            background-color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 15px 30px;
             position: fixed;
             width: calc(100% - 250px);
             z-index: 1000;
             margin-left: 250px;
+            background-color: var(--navbar-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .theme-toggle:hover {
+            color: var(--link-color);
         }
 
         .navbar-brand {
@@ -93,8 +141,8 @@
 
         /* Footer */
         .footer {
-            background: var(--dark-color);
-            color: var(--light-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 20px 0;
             text-align: center;
             margin-left: 250px;
@@ -176,16 +224,20 @@
 
 <body>
     <!-- Navbar Fragment -->
-    <nav th:fragment="navbar" class="navbar navbar-expand-lg">
-        <button class="btn btn-link d-lg-none" id="sidebarToggle">
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg"> <button class="btn btn-link d-lg-none" id="sidebarToggle"
+            title="Toggle sidebar">
             <i class="fas fa-bars"></i>
         </button>
         <a class="navbar-brand" href="/">
             <i class="fas fa-leaf"></i> FarmSure
         </a>
-        <div class="ms-auto">
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+        <div class="ms-auto d-flex align-items-center">
+            <div class="dropdown d-flex align-items-center">
+                <button class="theme-toggle me-3" title="Toggle theme">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="btn btn-light d-flex align-items-center gap-2" type="button" id="userDropdown"
+                    data-bs-toggle="dropdown">
                     <i class="fas fa-user-circle"></i>
                     <span th:text="${#authentication.name}">User</span>
                 </button>
@@ -239,15 +291,15 @@
 
     <!-- Footer Fragment -->
     <footer th:fragment="footer" class="footer">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6">
                     <p>&copy; 2025 FarmSure. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="/about" class="text-light me-3">About</a>
-                    <a href="/contact" class="text-light me-3">Contact</a>
-                    <a href="/privacy" class="text-light">Privacy Policy</a>
+                    <a href="/about" class="me-3">About</a>
+                    <a href="/contact" class="me-3">Contact</a>
+                    <a href="/privacy">Privacy Policy</a>
                 </div>
             </div>
         </div>

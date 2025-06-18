@@ -32,4 +32,17 @@ public class TransactionService {
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
+
+    public double getMonthlyRevenueByFarmer(User farmer) {
+        List<Transaction> transactions = transactionRepository.findByFarmer(farmer);
+        double total = 0;
+        java.time.YearMonth currentMonth = java.time.YearMonth.now();
+        for (Transaction t : transactions) {
+            java.time.LocalDate date = t.getTransactionDate().toLocalDate();
+            if (java.time.YearMonth.from(date).equals(currentMonth)) {
+                total += t.getPrice() * t.getQuantity();
+            }
+        }
+        return total;
+    }
 }
