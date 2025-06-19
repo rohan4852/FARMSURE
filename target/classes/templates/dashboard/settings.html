@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/main :: head">
+
+<head>
+    <title>Settings</title>
+</head>
+
+<body>
+    <div th:replace="layout/main :: navbar"></div>
+    <div class="wrapper">
+        <div th:replace="layout/main :: sidebar"></div>
+        <div class="main-content">
+            <h1>Settings</h1>
+            <p>Username: <span th:text="${username}">User</span></p>
+            <!-- Add settings form or details here -->
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/contracts")
 public class ContractController {
@@ -36,13 +38,13 @@ public class ContractController {
             contracts = contractService.findAll();
         }
         model.addAttribute("contracts", contracts);
-        return "contracts/list";
+        return "dashboard/contracts/list";
     }
 
     @GetMapping("/new")
     public String newContract(Model model) {
         model.addAttribute("contract", new Contract());
-        return "contracts/form";
+        return "dashboard/contracts/form";
     }
 
     @PostMapping
@@ -56,7 +58,7 @@ public class ContractController {
     @GetMapping("/{id}")
     public String viewContract(@PathVariable Long id, Model model) {
         model.addAttribute("contract", contractService.getContractById(id));
-        return "contracts/view";
+        return "dashboard/contracts/view";
     }
 
     @GetMapping("/{id}/bid")
@@ -64,7 +66,7 @@ public class ContractController {
         Contract contract = contractService.getContractById(id);
         model.addAttribute("contract", contract);
         model.addAttribute("bid", new Bid());
-        return "contracts/bid";
+        return "dashboard/contracts/bid";
     }
 
     @PostMapping("/{id}/bid")
@@ -81,7 +83,7 @@ public class ContractController {
         Contract contract = contractService.getContractById(id);
         model.addAttribute("contract", contract);
         model.addAttribute("bids", bidService.findByContract(contract));
-        return "contracts/bids";
+        return "dashboard/contracts/bids";
     }
 
     @PostMapping("/{contractId}/bids/{bidId}/accept")

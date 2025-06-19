@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>About Us - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container mt-4">
+            <h1 class="mb-4">About FarmSure</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2 class="mb-3">Our Mission</h2>
+                            <p class="lead">To revolutionize contract farming by connecting farmers and merchants
+                                through secure, transparent, and efficient digital solutions.</p>
+
+                            <h2 class="mt-4 mb-3">Who We Are</h2>
+                            <p>FarmSure is a leading agricultural technology platform dedicated to transforming the
+                                contract farming landscape. We provide a secure and transparent marketplace where
+                                farmers and merchants can connect, negotiate, and manage agricultural contracts
+                                efficiently.</p>
+
+                            <h2 class="mt-4 mb-3">What We Offer</h2>
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <strong>Secure Contract Management:</strong> Digital contract creation, negotiation,
+                                    and tracking
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <strong>Real-time Communication:</strong> Direct messaging between farmers and
+                                    merchants
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <strong>Market Insights:</strong> Up-to-date pricing and market trends
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    <strong>Quality Assurance:</strong> Standardized quality parameters and verification
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Key Statistics</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <h3>5000+</h3>
+                                            <small>Registered Farmers</small>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h3>1000+</h3>
+                                            <small>Active Merchants</small>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <h3>10000+</h3>
+                                            <small>Contracts Facilitated</small>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{layout/main :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

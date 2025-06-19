@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/main :: head">
+
+<head>
+    <title>User Profile</title>
+</head>
+
+<body>
+    <div th:replace="layout/main :: navbar"></div>
+    <div class="wrapper">
+        <div th:replace="layout/main :: sidebar"></div>
+        <div class="main-content">
+            <h1>User Profile</h1>
+            <p>Username: <span th:text="${username}">User</span></p>
+            <!-- Add more profile details here -->
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>

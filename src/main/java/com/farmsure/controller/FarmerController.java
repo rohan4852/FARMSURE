@@ -30,13 +30,13 @@ public class FarmerController {
     public String listProducts(@AuthenticationPrincipal User farmer, Model model) {
         List<Product> products = productService.getProductsByFarmer(farmer);
         model.addAttribute("products", products);
-        return "farmer/products";
+        return "dashboard/farmer/products";
     }
 
     @GetMapping("/products/new")
     public String showAddProductForm(Model model) {
         model.addAttribute("product", new Product());
-        return "farmer/add_product";
+        return "dashboard/farmer/add_product";
     }
 
     @PostMapping("/products")
@@ -55,6 +55,6 @@ public class FarmerController {
         List<PriceOffer> priceOffers = priceOfferService.getPriceOffersByProduct(product);
         model.addAttribute("product", product);
         model.addAttribute("priceOffers", priceOffers);
-        return "farmer/merchant_prices";
+        return "dashboard/farmer/merchant_prices";
     }
 }

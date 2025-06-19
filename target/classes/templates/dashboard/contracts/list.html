@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Contracts List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+    <h1>Contracts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Merchant</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="contract : ${contracts}">
+                <td th:text="${contract.id}">1</td>
+                <td th:text="${contract.merchant.name}">Merchant Name</td>
+                <td th:text="${contract.status}">Status</td>
+                <td>
+                    <a th:href="@{'/contracts/' + ${contract.id}}">View</a>
+                    <a th:href="@{'/contracts/' + ${contract.id} + '/bid'}">Bid</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/contracts/new}">Create New Contract</a>
+</body>
+
+</html>

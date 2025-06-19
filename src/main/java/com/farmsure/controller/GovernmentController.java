@@ -28,13 +28,13 @@ public class GovernmentController {
     public String listBasePrices(Model model) {
         List<BasePrice> basePrices = basePriceService.getAllBasePrices();
         model.addAttribute("basePrices", basePrices);
-        return "government/base_prices";
+        return "dashboard/government/base_prices";
     }
 
     @GetMapping("/base-prices/new")
     public String showAddBasePriceForm(Model model) {
         model.addAttribute("basePrice", new BasePrice());
-        return "government/add_base_price";
+        return "dashboard/government/add_base_price";
     }
 
     @PostMapping("/base-prices")
@@ -47,6 +47,6 @@ public class GovernmentController {
     public String listTransactions(Model model) {
         List<Transaction> transactions = transactionService.getAllTransactions();
         model.addAttribute("transactions", transactions);
-        return "government/transactions";
+        return "dashboard/government/transactions";
     }
 }

@@ -30,7 +30,7 @@ public class MerchantController {
     public String listProducts(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return "merchant/products";
+        return "dashboard/merchant/products";
     }
 
     @GetMapping("/products/{productId}/offer")
@@ -41,7 +41,7 @@ public class MerchantController {
         }
         model.addAttribute("product", product);
         model.addAttribute("priceOffer", new PriceOffer());
-        return "merchant/offer_price";
+        return "dashboard/merchant/offer_price";
     }
 
     @PostMapping("/products/{productId}/offer")

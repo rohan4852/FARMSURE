@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Base Prices</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+    <h1>Base Prices</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="basePrice : ${basePrices}">
+                <td th:text="${basePrice.productName}">Product Name</td>
+                <td th:text="${basePrice.price}">Price</td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/government/base-prices/new}">Add New Base Price</a>
+</body>
+
+</html>

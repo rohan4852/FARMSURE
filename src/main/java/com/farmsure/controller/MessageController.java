@@ -22,20 +22,20 @@ public class MessageController {
     @GetMapping("/inbox")
     public String inbox(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("messages", messageService.getReceivedMessages(user));
-        return "messages/inbox";
+        return "dashboard/messages/inbox";
     }
 
     @GetMapping("/sent")
     public String sent(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("messages", messageService.getSentMessages(user));
-        return "messages/sent";
+        return "dashboard/messages/sent";
     }
 
     @GetMapping("/new")
     public String newMessage(Model model) {
         model.addAttribute("message", new Message());
         model.addAttribute("users", userService.getAllUsers());
-        return "messages/form";
+        return "dashboard/messages/form";
     }
 
     @PostMapping
@@ -52,7 +52,7 @@ public class MessageController {
             messageService.markAsRead(message);
         }
         model.addAttribute("message", message);
-        return "messages/view";
+        return "dashboard/messages/view";
     }
 
     @DeleteMapping("/{id}")

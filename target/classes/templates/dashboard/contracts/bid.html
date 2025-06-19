@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Place Bid</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+    <h1>Place Bid</h1>
+    <form th:action="@{'/contracts/' + ${contract.id} + '/bid'}" th:object="${bid}" method="post">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" th:field="*{amount}" step="0.01" required />
+        <br />
+        <label for="proposal">Proposal:</label>
+        <textarea id="proposal" th:field="*{proposal}" required></textarea>
+        <br />
+        <button type="submit">Submit Bid</button>
+    </form>
+    <a th:href="@{'/contracts/' + ${contract.id}}">Back to Contract</a>
+</body>
+
+</html>

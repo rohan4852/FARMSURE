@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="layout/main :: head">
+<head th:replace="~{layout/main :: head}">
     <title>Error - FarmSure</title>
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav th:replace="layout/main :: navbar"></nav>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -27,10 +27,10 @@
     </div>
 
     <!-- Footer -->
-    <footer th:replace="layout/main :: footer"></footer>
+    <footer th:replace="~{layout/main :: footer}"></footer>
 
     <!-- Scripts -->
-    <div th:replace="layout/main :: scripts"></div>
+    <div th:replace="~{layout/main :: scripts}"></div>
 </body>
 
 </html>

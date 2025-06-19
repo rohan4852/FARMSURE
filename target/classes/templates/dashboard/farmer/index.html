@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="layout/main :: head">
+<head th:replace="~{layout/main :: head}">
     <title>Farmer Dashboard - FarmSure</title>
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav th:replace="layout/main :: navbar"></nav>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
 
     <!-- Sidebar -->
-    <div th:replace="layout/main :: sidebar"></div>
+    <div th:replace="~{layout/main :: sidebar}"></div>
 
     <!-- Main Content -->
     <div class="main-content">
