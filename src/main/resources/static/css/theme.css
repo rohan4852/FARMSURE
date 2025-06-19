@@ -344,4 +344,34 @@ body {
     text-decoration: underline;
 }
 
+/* Main Content Area */
+.main-content {
+    margin-left: 250px;
+    /* Same as sidebar width */
+    padding-top: 60px;
+    /* Height of navbar */
+    min-height: calc(100vh - 60px);
+    background-color: var(--bg-primary);
+    transition: margin-left 0.3s ease;
+    width: calc(100% - 250px);
+    position: relative;
+}
+
+body.sidebar-collapsed .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+.navbar {
+    z-index: 1030;
+    background-color: var(--navbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 60px;
+}
+
 /* Dark mode overrides for Bootstrap components */

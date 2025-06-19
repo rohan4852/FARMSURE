@@ -106,7 +106,9 @@ public class DashboardController {
 
     @GetMapping("/profile")
     public String profile(Model model, Authentication authentication) {
+        User user = userService.findByUsername(authentication.getName());
         model.addAttribute("username", authentication.getName());
+        model.addAttribute("user", user);
         return "dashboard/profile";
     }
 

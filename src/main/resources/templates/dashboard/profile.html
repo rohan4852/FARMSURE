@@ -1,22 +1,77 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/main :: head">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/main :: layout(~{::title}, ~{::main})">
 
 <head>
-    <title>User Profile</title>
+    <title>User Profile - FarmSure</title>
 </head>
 
 <body>
-    <div th:replace="layout/main :: navbar"></div>
-    <div class="wrapper">
-        <div th:replace="layout/main :: sidebar"></div>
-        <div class="main-content">
-            <h1>User Profile</h1>
-            <p>Username: <span th:text="${username}">User</span></p>
-            <!-- Add more profile details here -->
+    <main>
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mt-4">User Profile</h1>
+                <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-user me-1"></i>
+                            Profile Details
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" th:value="${username}"
+                                        readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="email" th:value="${user?.email}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="fullName" th:value="${user?.fullName}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" th:value="${user?.phone}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" rows="3"
+                                        th:text="${user?.address}"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Account Security
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary" type="button">
+                                    <i class="fas fa-key me-1"></i>
+                                    Change Password
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button">
+                                    <i class="fas fa-bell me-1"></i>
+                                    Notification Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div th:replace="layout/main :: footer"></div>
-    <div th:replace="layout/main :: scripts"></div>
+    </main>
 </body>
 
 </html>
