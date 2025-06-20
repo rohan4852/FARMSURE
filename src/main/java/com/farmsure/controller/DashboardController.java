@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class DashboardController {
@@ -106,16 +108,76 @@ public class DashboardController {
 
     @GetMapping("/profile")
     public String profile(Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("username", authentication.getName());
-        model.addAttribute("user", user);
-        return "dashboard/profile";
+        try {
+            User user = userService.findByUsername(authentication.getName());
+            model.addAttribute("username", authentication.getName());
+            model.addAttribute("user", user);
+            return "dashboard/profile";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Error Loading Profile");
+            model.addAttribute("errorMessage", "Could not load user profile. Please try again later.");
+            return "error/error";
+        }
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute("user") User updatedUser, Authentication authentication, Model model) {
+        try {
+            User user = userService.findByUsername(authentication.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setFullName(updatedUser.getFullName());
+            user.setPhone(updatedUser.getPhone());
+            user.setAddress(updatedUser.getAddress());
+            userService.save(user);
+            model.addAttribute("successMessage", "Profile updated successfully!");
+            return "redirect:/profile";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Error Updating Profile");
+            model.addAttribute("errorMessage", "Could not update profile. Please try again later.");
+            return "error/error";
+        }
     }
 
     @GetMapping("/settings")
     public String settings(Model model, Authentication authentication) {
-        model.addAttribute("username", authentication.getName());
-        return "dashboard/settings";
+        try {
+            User user = userService.findByUsername(authentication.getName());
+            model.addAttribute("username", authentication.getName());
+            model.addAttribute("user", user);
+            return "dashboard/settings";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Error Loading Settings");
+            model.addAttribute("errorMessage", "Could not load user settings. Please try again later.");
+            return "error/error";
+        }
+    }
+
+    @PostMapping("/settings/update")
+    public String updateSettings(
+            @RequestParam("themePreference") String themePreference,
+            @RequestParam("languagePreference") String languagePreference,
+            @RequestParam(value = "emailNotifications", required = false) Boolean emailNotifications,
+            @RequestParam(value = "smsNotifications", required = false) Boolean smsNotifications,
+            Authentication authentication,
+            Model model) {
+        try {
+            User user = userService.findByUsername(authentication.getName());
+            user.setThemePreference(themePreference);
+            user.setLanguagePreference(languagePreference);
+            user.setEmailNotifications(emailNotifications != null ? emailNotifications : false);
+            user.setSmsNotifications(smsNotifications != null ? smsNotifications : false);
+            userService.save(user);
+            model.addAttribute("successMessage", "Settings updated successfully!");
+            return "redirect:/settings";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Error Updating Settings");
+            model.addAttribute("errorMessage", "Could not update settings. Please try again later.");
+            return "error/error";
+        }
     }
 
     @GetMapping("/marketplace")

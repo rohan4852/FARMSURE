@@ -13,6 +13,11 @@
                 <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
             </div>
 
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
             <div class="row">
                 <div class="col-xl-8">
                     <div class="card mb-4">
@@ -21,7 +26,7 @@
                             Profile Details
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form th:action="@{/profile/update}" method="POST" th:object="${user}">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="username" th:value="${username}"
@@ -29,19 +34,22 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" th:value="${user?.email}">
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        th:value="${user?.email}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="fullName" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="fullName" th:value="${user?.fullName}">
+                                    <input type="text" class="form-control" id="fullName" name="fullName"
+                                        th:value="${user?.fullName}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Phone Number</label>
-                                    <input type="tel" class="form-control" id="phone" th:value="${user?.phone}">
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                        th:value="${user?.phone}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Address</label>
-                                    <textarea class="form-control" id="address" rows="3"
+                                    <textarea class="form-control" id="address" name="address" rows="3"
                                         th:text="${user?.address}"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -56,15 +64,17 @@
                             Account Security
                         </div>
                         <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-outline-primary" type="button">
+                            <form th:action="@{/profile/change-password}" method="POST" class="mb-3">
+                                <button type="submit" class="btn btn-outline-primary w-100 mb-2">
                                     <i class="fas fa-key me-1"></i>
                                     Change Password
                                 </button>
-                                <button class="btn btn-outline-secondary" type="button">
-                                    <i class="fas fa-bell me-1"></i>
-                                    Notification Settings
-                                </button>
+                            </form>
+                            <div class="d-grid">
+                                <a href="/settings" class="btn btn-outline-secondary">
+                                    <i class="fas fa-cog me-1"></i>
+                                    Manage Settings
+                                </a>
                             </div>
                         </div>
                     </div>

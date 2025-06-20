@@ -29,6 +29,30 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role;
 
+    @Column
+    private String email;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String address;
+
+    @Column(name = "theme_preference")
+    private String themePreference;
+
+    @Column(name = "language_preference")
+    private String languagePreference;
+
+    @Column(name = "email_notifications")
+    private Boolean emailNotifications = true;
+
+    @Column(name = "sms_notifications")
+    private Boolean smsNotifications = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String roleWithPrefix = role.startsWith("ROLE_") ? role : "ROLE_" + role;

@@ -13,6 +13,11 @@
                 <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
             </div>
 
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
             <div class="row">
                 <div class="col-xl-8">
                     <div class="card mb-4">
@@ -21,52 +26,63 @@
                             General Settings
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form th:action="@{/settings/update}" method="POST">
                                 <div class="mb-3">
                                     <label class="form-label d-block">Theme Preference</label>
-                                    <div class="btn-group" role="group">
-                                        <input type="radio" class="btn-check" name="theme" id="light" autocomplete="off"
-                                            checked>
+                                    <div class="btn-group w-100" role="group">
+                                        <input type="radio" class="btn-check" name="themePreference" id="light"
+                                            value="light"
+                                            th:checked="${user?.themePreference == 'light' || user?.themePreference == null}">
                                         <label class="btn btn-outline-primary" for="light">
                                             <i class="fas fa-sun me-1"></i>
                                             Light
                                         </label>
-                                        <input type="radio" class="btn-check" name="theme" id="dark" autocomplete="off">
+
+                                        <input type="radio" class="btn-check" name="themePreference" id="dark"
+                                            value="dark" th:checked="${user?.themePreference == 'dark'}">
                                         <label class="btn btn-outline-primary" for="dark">
                                             <i class="fas fa-moon me-1"></i>
                                             Dark
                                         </label>
-                                        <input type="radio" class="btn-check" name="theme" id="system"
-                                            autocomplete="off">
+
+                                        <input type="radio" class="btn-check" name="themePreference" id="system"
+                                            value="system" th:checked="${user?.themePreference == 'system'}">
                                         <label class="btn btn-outline-primary" for="system">
                                             <i class="fas fa-desktop me-1"></i>
                                             System
                                         </label>
                                     </div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Language</label>
-                                    <select class="form-select">
-                                        <option value="en">English</option>
-                                        <option value="es">Español</option>
-                                        <option value="fr">Français</option>
+                                    <select class="form-select" name="languagePreference" aria-label="Select language">
+                                        <option value="en"
+                                            th:selected="${user?.languagePreference == 'en' || user?.languagePreference == null}">
+                                            English
+                                        </option>
+                                        <option value="es" th:selected="${user?.languagePreference == 'es'}">Español
+                                        </option>
+                                        <option value="fr" th:selected="${user?.languagePreference == 'fr'}">Français
+                                        </option>
                                     </select>
                                 </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Notifications</label>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="emailNotif">
-                                        <label class="form-check-label" for="emailNotif">Email notifications</label>
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications"
+                                            name="emailNotifications" th:checked="${user?.emailNotifications == true}">
+                                        <label class="form-check-label" for="emailNotifications">Email
+                                            notifications</label>
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="browserNotif">
-                                        <label class="form-check-label" for="browserNotif">Browser notifications</label>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="smsNotif">
-                                        <label class="form-check-label" for="smsNotif">SMS notifications</label>
+                                        <input class="form-check-input" type="checkbox" id="smsNotifications"
+                                            name="smsNotifications" th:checked="${user?.smsNotifications == true}">
+                                        <label class="form-check-label" for="smsNotifications">SMS notifications</label>
                                     </div>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary">Save Settings</button>
                             </form>
                         </div>
@@ -80,16 +96,44 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                <button class="btn btn-outline-danger" type="button">
+                                <a href="/settings/export-data" class="btn btn-outline-primary">
+                                    <i class="fas fa-download me-1"></i>
+                                    Export My Data
+                                </a>
+                                <a href="/profile" class="btn btn-outline-secondary">
+                                    <i class="fas fa-user me-1"></i>
+                                    View Profile
+                                </a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteAccountModal">
                                     <i class="fas fa-trash me-1"></i>
                                     Delete Account
                                 </button>
-                                <button class="btn btn-outline-warning" type="button">
-                                    <i class="fas fa-download me-1"></i>
-                                    Export Data
-                                </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Account Modal -->
+        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Warning: This action cannot be undone!</p>
+                        <p>Are you sure you want to delete your account? All your data will be permanently removed.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form th:action="@{/settings/delete-account}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Delete Account</button>
+                        </form>
                     </div>
                 </div>
             </div>
