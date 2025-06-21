@@ -62,6 +62,14 @@ public class BidService {
         return bidRepository.findByContract(contract);
     }
 
+    public List<Bid> findByMerchant(User merchant) {
+        // Find all bids for contracts owned by this merchant
+        return bidRepository.findAll().stream()
+                .filter(bid -> bid.getContract() != null && bid.getContract().getMerchant() != null
+                        && bid.getContract().getMerchant().getId().equals(merchant.getId()))
+                .toList();
+    }
+
     @Transactional
     public void acceptBid(Long contractId, Long bidId) {
         Bid bid = bidRepository.findById(bidId)

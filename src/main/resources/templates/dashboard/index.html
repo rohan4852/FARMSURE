@@ -150,6 +150,77 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Active Contracts</h6>
+                            <a th:if="${#authentication.principal.role == 'MERCHANT'}" th:href="@{/contracts/new}"
+                                class="btn btn-primary">Create New Contract</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Base Price</th>
+                                            <th>Status</th>
+                                            <th>Merchant</th>
+                                            <th>Assigned Farmer</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="contract : ${activeContracts}">
+                                            <td th:text="${contract.id}"></td>
+                                            <td th:text="${contract.title}"></td>
+                                            <td th:text="${contract.product}"></td>
+                                            <td th:text="${contract.quantity}"></td>
+                                            <td th:text="${contract.basePrice}"></td>
+                                            <td>
+                                                <span th:text="${contract.status}"
+                                                    th:classappend="'badge bg-' + (${contract.status} == 'OPEN' ? 'primary' : (${contract.status} == 'ASSIGNED' ? 'success' : 'secondary'))">
+                                                </span>
+                                            </td>
+                                            <td
+                                                th:text="${contract.merchant != null ? (contract.merchant.fullName != null ? contract.merchant.fullName : contract.merchant.username) : ''}">
+                                            </td>
+                                            <td
+                                                th:text="${contract.assignedFarmer != null ? (contract.assignedFarmer.fullName != null ? contract.assignedFarmer.fullName : contract.assignedFarmer.username) : '-'}">
+                                            </td>
+                                            <td>
+                                                <a th:href="@{'/contracts/' + ${contract.id}}"
+                                                    class="btn btn-sm btn-outline-info me-1">View</a>
+                                                <span th:if="${#authentication.principal.role == 'FARMER'}">
+                                                    <a th:href="@{'/contracts/' + ${contract.id} + '/bid'}"
+                                                        class="btn btn-sm btn-outline-success">Bid</a>
+                                                </span>
+                                                <span th:if="${#authentication.principal.role == 'MERCHANT'}">
+                                                    <a th:href="@{'/contracts/' + ${contract.id} + '/bids'}"
+                                                        class="btn btn-sm btn-outline-primary">View Bids</a>
+                                                    <a th:href="@{'/contracts/' + ${contract.id} + '/edit'}"
+                                                        class="btn btn-sm btn-outline-warning">Edit</a>
+                                                    <form th:action="@{'/contracts/' + ${contract.id}}" method="post"
+                                                        style="display:inline">
+                                                        <input type="hidden" name="_method" value="delete" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this contract?');">Delete</button>
+                                                    </form>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

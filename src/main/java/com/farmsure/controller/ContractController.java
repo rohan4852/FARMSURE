@@ -11,12 +11,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/contracts")
 public class ContractController {
+    private static final Logger logger = LoggerFactory.getLogger(ContractController.class);
+
     @Autowired
     private ContractService contractService;
 
@@ -41,21 +46,29 @@ public class ContractController {
         return "dashboard/contracts/list";
     }
 
-    @GetMapping("/new")
+    @GetMapping({ "/new", "/add" })
     public String newContract(Model model) {
         model.addAttribute("contract", new Contract());
         return "dashboard/contracts/form";
     }
 
     @PostMapping
-    public String createContract(@AuthenticationPrincipal User user, @ModelAttribute Contract contract) {
+    public String createContract(@AuthenticationPrincipal User user, @Valid @ModelAttribute Contract contract,
+            BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors()
+                    .forEach(error -> System.out.println("[CONTRACT FORM ERROR] " + error.toString()));
+            model.addAttribute("errorMessage", "Please correct the errors in the form.");
+            return "dashboard/contracts/form";
+        }
         contract.setMerchant(user);
         contract.setStatus("OPEN");
         contractService.createContract(contract);
+        model.addAttribute("successMessage", "Contract created successfully!");
         return "redirect:/contracts";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public String viewContract(@PathVariable Long id, Model model) {
         model.addAttribute("contract", contractService.getContractById(id));
         return "dashboard/contracts/view";
@@ -98,9 +111,34 @@ public class ContractController {
         return "redirect:/contracts/" + contractId + "/bids";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public String deleteContract(@PathVariable Long id) {
         contractService.deleteContract(id);
         return "redirect:/contracts";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception ex, Model model) {
+        logger.error("[CONTRACTS] Unhandled exception: ", ex);
+        model.addAttribute("errorMessage", ex.getMessage());
+        // Add stack trace for debugging
+        StringBuilder sb = new StringBuilder();
+        for (StackTraceElement element : ex.getStackTrace()) {
+            sb.append(element.toString()).append("\n");
+        }
+        model.addAttribute("stackTrace", sb.toString());
+        return "error/error";
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        return "Test OK";
+    }
+
+    @GetMapping("/test-endpoint")
+    @ResponseBody
+    public String testEndpoint() {
+        return "Test OK";
     }
 }

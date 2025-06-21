@@ -1,6 +1,8 @@
 package com.farmsure.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -12,31 +14,33 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Title is required")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Description is required")
     private String description;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Product is required")
     private String product;
 
-    @Column(nullable = false)
+    @NotNull(message = "Quantity is required")
+    @DecimalMin(value = "0.01", message = "Quantity must be greater than 0")
     private Double quantity;
 
-    @Column(nullable = false)
+    @NotNull(message = "Base price is required")
+    @DecimalMin(value = "0.01", message = "Base price must be greater than 0")
     private Double basePrice;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Quality grade is required")
     private String qualityGrade;
 
-    @Column(nullable = false)
-    private LocalDateTime biddingEndDate;
+    @NotNull(message = "Bidding end date is required")
+    private LocalDate biddingEndDate;
 
-    @Column(nullable = false)
-    private LocalDateTime deliveryDate;
+    @NotNull(message = "Delivery date is required")
+    private LocalDate deliveryDate;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Terms are required")
     private String terms;
 
     @Column(nullable = false)
@@ -117,19 +121,19 @@ public class Contract {
         this.qualityGrade = qualityGrade;
     }
 
-    public LocalDateTime getBiddingEndDate() {
+    public LocalDate getBiddingEndDate() {
         return biddingEndDate;
     }
 
-    public void setBiddingEndDate(LocalDateTime biddingEndDate) {
+    public void setBiddingEndDate(LocalDate biddingEndDate) {
         this.biddingEndDate = biddingEndDate;
     }
 
-    public LocalDateTime getDeliveryDate() {
+    public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(LocalDateTime deliveryDate) {
+    public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

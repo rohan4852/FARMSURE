@@ -264,26 +264,39 @@
         <div class="nav flex-column">
             <a class="nav-link" href="/dashboard">
                 <i class="fas fa-chart-line"></i> Dashboard
-            </a> <a class="nav-link" href="/contracts-overview">
-                <i class="fas fa-file-contract"></i> Contracts Overview
             </a>
-            <a class="nav-link" href="/marketplace">
-                <i class="fas fa-store"></i> Marketplace
-            </a>
-            <a class="nav-link" href="/messages">
-                <i class="fas fa-envelope"></i> Messages
-            </a>
-            <a class="nav-link" href="/reports">
-                <i class="fas fa-chart-bar"></i> Reports
-            </a>
-            <div th:if="${#authentication.principal.role == 'FARMER'}">
-                <a class="nav-link" href="/my-crops">
-                    <i class="fas fa-seedling"></i> My Crops
-                </a>
-            </div>
             <div th:if="${#authentication.principal.role == 'MERCHANT'}">
+                <a class="nav-link" href="/contracts-overview">
+                    <i class="fas fa-file-contract"></i> My Contracts
+                </a>
+                <a class="nav-link" href="/contracts/add">
+                    <i class="fas fa-plus-circle"></i> Add Contract
+                </a>
+                <a class="nav-link" href="/marketplace">
+                    <i class="fas fa-store"></i> Marketplace
+                </a>
+                <a class="nav-link" href="/messages">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
                 <a class="nav-link" href="/inventory">
                     <i class="fas fa-warehouse"></i> Inventory
+                </a>
+                <a class="nav-link" href="/reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </div>
+            <div th:if="${#authentication.principal.role == 'FARMER'}">
+                <a class="nav-link" href="/contracts-overview">
+                    <i class="fas fa-file-contract"></i> Available Contracts
+                </a>
+                <a class="nav-link" href="/marketplace">
+                    <i class="fas fa-store"></i> Marketplace
+                </a>
+                <a class="nav-link" href="/messages">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a class="nav-link" href="/my-crops">
+                    <i class="fas fa-seedling"></i> My Crops
                 </a>
             </div>
         </div>

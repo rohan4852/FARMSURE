@@ -78,9 +78,26 @@ public class DashboardController {
                 return "dashboard/farmer/index";
             } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MERCHANT"))) {
                 // Add merchant-specific data
-                model.addAttribute("myContracts", contractService.findByMerchant(user));
-                model.addAttribute("pendingBids", bidService.findPendingByMerchant(user));
-                model.addAttribute("activeContracts", contractService.findByMerchantAndStatus(user, "ASSIGNED"));
+                var myContracts = contractService.findByMerchant(user);
+                var activeContracts = contractService.findByMerchantAndStatus(user, "ASSIGNED");
+                var pendingBids = bidService.findPendingByMerchant(user);
+                var allBids = bidService.findByMerchant(user);
+                int activeFarmers = (int) myContracts.stream().filter(c -> c.getAssignedFarmer() != null)
+                        .map(c -> c.getAssignedFarmer().getId()).distinct().count();
+                double totalInvestment = myContracts.stream()
+                        .mapToDouble(c -> c.getBasePrice() != null
+                                ? c.getBasePrice() * (c.getQuantity() != null ? c.getQuantity() : 0)
+                                : 0)
+                        .sum();
+                int activeBids = (allBids instanceof java.util.Collection) ? ((java.util.Collection<?>) allBids).size()
+                        : 0;
+                model.addAttribute("myContracts", myContracts);
+                model.addAttribute("activeContracts", activeContracts);
+                model.addAttribute("pendingBids", pendingBids);
+                model.addAttribute("activeFarmers", activeFarmers);
+                model.addAttribute("totalInvestment", totalInvestment);
+                model.addAttribute("activeBids", activeBids);
+                // TODO: Add real messages if needed
                 return "dashboard/merchant/index";
             } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 return "dashboard/admin/index";

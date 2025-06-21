@@ -56,4 +56,9 @@ public class UserService implements UserDetailsService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public User save(User user) {
+        // Optionally encode password if changed, but for profile/settings just save
+        return userRepository.save(user);
+    }
 }

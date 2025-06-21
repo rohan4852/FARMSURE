@@ -26,7 +26,8 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Active Contracts</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                        th:text="${activeContracts != null ? activeContracts.size() : 0}">0</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-file-contract fa-2x text-gray-300"></i>
@@ -43,7 +44,8 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         Total Investment</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$120,000</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalInvestment}">$0
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -60,7 +62,8 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                         Active Farmers</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${activeFarmers}">0
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -77,7 +80,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         Active Bids</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">6</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${activeBids}">0</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-gavel fa-2x text-gray-300"></i>
@@ -94,7 +97,7 @@
                 <div class="col-xl-8 col-lg-7">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Active Contracts</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">My Contracts</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -102,65 +105,56 @@
                                     <thead>
                                         <tr>
                                             <th>Contract ID</th>
-                                            <th>Farmer</th>
                                             <th>Product</th>
                                             <th>Quantity</th>
                                             <th>Status</th>
-                                            <th>Value</th>
+                                            <th>Base Price</th>
+                                            <th>Assigned Farmer</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>#12345</td>
-                                            <td>John Smith</td>
-                                            <td>Wheat</td>
-                                            <td>50 tons</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>$15,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#12346</td>
-                                            <td>Mary Johnson</td>
-                                            <td>Corn</td>
-                                            <td>30 tons</td>
-                                            <td><span class="badge bg-warning">Pending</span></td>
-                                            <td>$8,500</td>
+                                        <tr th:each="contract : ${myContracts}">
+                                            <td th:text="${contract.id}"></td>
+                                            <td th:text="${contract.product}"></td>
+                                            <td th:text="${contract.quantity}"></td>
+                                            <td th:text="${contract.status}"></td>
+                                            <td th:text="${contract.basePrice}"></td>
+                                            <td
+                                                th:text="${contract.assignedFarmer != null ? contract.assignedFarmer.username : 'Unassigned'}">
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <a href="/contracts/add" class="btn btn-primary mt-2">Add New Contract</a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Nearby Farmers -->
+                <!-- Pending Bids -->
                 <div class="col-xl-4 col-lg-5">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Nearby Farmers</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Pending Bids</h6>
                         </div>
                         <div class="card-body">
-                            <div class="farmer-list">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="flex-shrink-0">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Farmer">
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">John Smith</h6>
-                                        <small class="text-muted">5km away - Wheat, Corn</small>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-primary">Contact</button>
-                                </div>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="flex-shrink-0">
-                                        <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Farmer">
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">Mary Johnson</h6>
-                                        <small class="text-muted">8km away - Soybeans</small>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-primary">Contact</button>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Contract</th>
+                                            <th>Farmer</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="bid : ${pendingBids}">
+                                            <td th:text="${bid.contract.title}"></td>
+                                            <td th:text="${bid.farmer.username}"></td>
+                                            <td th:text="${bid.amount}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
