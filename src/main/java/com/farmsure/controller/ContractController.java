@@ -37,7 +37,8 @@ public class ContractController {
         if ("ROLE_MERCHANT".equals(user.getRole())) {
             contracts = contractService.findByMerchant(user);
         } else if ("ROLE_FARMER".equals(user.getRole())) {
-            contracts = contractService.findByAssignedFarmer(user);
+            // Show open contracts available for bidding to farmers
+            contracts = contractService.findByStatus("OPEN");
         } else {
             // Admin sees all contracts
             contracts = contractService.findAll();

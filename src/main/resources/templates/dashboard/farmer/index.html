@@ -45,8 +45,8 @@
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         Revenue (Monthly)</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                        th:text="${#numbers.formatDecimal(monthlyRevenue, 0, 'COMMA', 2, 'POINT')}">
-                                        $0.00</div>
+                                        th:text="'₹' + #numbers.formatDecimal(monthlyRevenue, 0, 'COMMA', 2, 'POINT')">
+                                        ₹0.00</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -114,19 +114,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>#12345</td>
-                                            <td>Wheat</td>
-                                            <td>AgriCorp Ltd</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>$15,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#12344</td>
-                                            <td>Corn</td>
-                                            <td>FarmTech Inc</td>
-                                            <td><span class="badge bg-warning">Pending</span></td>
-                                            <td>$8,500</td>
+                                        <tr th:each="contract : ${recentContracts}">
+                                            <td th:text="${contract.id}">#12345</td>
+                                            <td th:text="${contract.product.name}">Wheat</td>
+                                            <td th:text="${contract.merchant.username}">AgriCorp Ltd</td>
+                                            <td>
+                                                <span
+                                                    th:classappend="${contract.status == 'OPEN'} ? 'badge bg-success' : 'badge bg-secondary'"
+                                                    th:text="${contract.status}">Active</span>
+                                            </td>
+                                            <td
+                                                th:text="'₹' + #numbers.formatDecimal(contract.basePrice * contract.quantity, 0, 'COMMA', 2, 'POINT')">
+                                                ₹15,000</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -145,7 +144,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
                                     <span>Wheat (per ton)</span>
-                                    <span class="text-success">$320</span>
+                                    <span class="text-success">₹30020</span>
                                 </div>
                                 <div class="progress" style="height: 5px;">
                                     <div class="progress-bar bg-success" style="width: 80%"></div>
@@ -154,7 +153,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
                                     <span>Corn (per ton)</span>
-                                    <span class="text-info">$280</span>
+                                    <span class="text-info">₹20080</span>
                                 </div>
                                 <div class="progress" style="height: 5px;">
                                     <div class="progress-bar bg-info" style="width: 65%"></div>
@@ -163,7 +162,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
                                     <span>Soybeans (per ton)</span>
-                                    <span class="text-primary">$450</span>
+                                    <span class="text-primary">₹40050</span>
                                 </div>
                                 <div class="progress" style="height: 5px;">
                                     <div class="progress-bar bg-primary" style="width: 90%"></div>

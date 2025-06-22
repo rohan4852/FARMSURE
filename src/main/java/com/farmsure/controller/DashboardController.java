@@ -55,6 +55,11 @@ public class DashboardController {
                 model.addAttribute("availableContracts",
                         availableContracts != null ? availableContracts : java.util.Collections.emptyList());
 
+                // Add recent contracts for farmer dashboard (excluding demo data)
+                var recentContracts = contractService.findRecentContractsByFarmer(user);
+                model.addAttribute("recentContracts",
+                        recentContracts != null ? recentContracts : java.util.Collections.emptyList());
+
                 var myBids = bidService.findByFarmer(user);
                 model.addAttribute("myBids", myBids != null ? myBids : java.util.Collections.emptyList());
 
