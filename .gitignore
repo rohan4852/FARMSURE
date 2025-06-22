@@ -1,0 +1,18 @@
+# Ignore Maven/Java build output
+/target/
+/build/
+*.class
+
+# Ignore IDE/project files
+/.idea/
+*.iml
+*.log
+/.vscode/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore other common files
+*.swp
+*.swo
