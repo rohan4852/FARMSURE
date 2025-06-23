@@ -19,4 +19,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     List<Contract> findByStatus(String status);
 
     List<Contract> findByMerchantAndStatus(User merchant, String status);
+
+    List<Contract> findByAssignedFarmerAndStatus(User farmer, String status);
 }

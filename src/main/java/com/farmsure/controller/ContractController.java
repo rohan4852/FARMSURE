@@ -112,6 +112,18 @@ public class ContractController {
         return "redirect:/contracts/" + contractId + "/bids";
     }
 
+    @PostMapping("/{contractId}/bids/{bidId}/decline")
+    public String declineBid(@PathVariable Long contractId,
+            @PathVariable Long bidId,
+            @AuthenticationPrincipal User user) {
+        Contract contract = contractService.getContractById(contractId);
+        if (!contract.getMerchant().equals(user)) {
+            throw new RuntimeException("Unauthorized");
+        }
+        bidService.declineBid(contractId, bidId);
+        return "redirect:/contracts/" + contractId + "/bids";
+    }
+
     @DeleteMapping("/{id:\\d+}")
     public String deleteContract(@PathVariable Long id) {
         contractService.deleteContract(id);

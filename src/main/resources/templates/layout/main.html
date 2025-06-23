@@ -291,10 +291,22 @@
                 <a class="nav-link" href="/reports">
                     <i class="fas fa-chart-bar"></i> Reports
                 </a>
+                <a class="nav-link" href="/profile">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a class="nav-link" href="/settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
             </div>
             <div th:if="${#authentication.principal.role == 'FARMER'}">
                 <a class="nav-link" href="/contracts-overview">
                     <i class="fas fa-file-contract"></i> Available Contracts
+                </a>
+                <a class="nav-link" href="/farmer/active-contracts">
+                    <i class="fas fa-clipboard-check"></i> My Active Contracts
+                </a>
+                <a class="nav-link" href="/farmer/products">
+                    <i class="fas fa-seedling"></i> My Crops
                 </a>
                 <a class="nav-link" href="/marketplace">
                     <i class="fas fa-store"></i> Marketplace
@@ -302,8 +314,11 @@
                 <a class="nav-link" href="/messages">
                     <i class="fas fa-envelope"></i> Messages
                 </a>
-                <a class="nav-link" href="/my-crops">
-                    <i class="fas fa-seedling"></i> My Crops
+                <a class="nav-link" href="/profile">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a class="nav-link" href="/settings">
+                    <i class="fas fa-cog"></i> Settings
                 </a>
             </div>
         </div>

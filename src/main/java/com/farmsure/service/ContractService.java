@@ -48,4 +48,14 @@ public class ContractService {
     public List<Contract> findAll() {
         return contractRepository.findAll();
     }
+
+    public List<Contract> findRecentContractsByFarmer(User farmer) {
+        // Return the 5 most recent contracts for the given farmer
+        List<Contract> contracts = contractRepository.findByAssignedFarmerOrderByCreatedAtDesc(farmer);
+        return contracts.size() > 5 ? contracts.subList(0, 5) : contracts;
+    }
+
+    public List<Contract> findByAssignedFarmerAndStatus(User farmer, String status) {
+        return contractRepository.findByAssignedFarmerAndStatus(farmer, status);
+    }
 }

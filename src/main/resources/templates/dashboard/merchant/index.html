@@ -145,6 +145,7 @@
                                             <th>Contract</th>
                                             <th>Farmer</th>
                                             <th>Amount</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,6 +153,20 @@
                                             <td th:text="${bid.contract.title}"></td>
                                             <td th:text="${bid.farmer.username}"></td>
                                             <td th:text="${bid.amount}"></td>
+                                            <td>
+                                                <form
+                                                    th:action="@{'/contracts/' + ${bid.contract.id} + '/bids/' + ${bid.id} + '/accept'}"
+                                                    method="post" style="display:inline;">
+                                                    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                                </form>
+                                                <form
+                                                    th:action="@{'/contracts/' + ${bid.contract.id} + '/bids/' + ${bid.id} + '/decline'}"
+                                                    method="post" style="display:inline;">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+                                                </form>
+                                                <a th:href="@{'/messages?to=' + ${bid.farmer.username}}"
+                                                    class="btn btn-info btn-sm">Contact</a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

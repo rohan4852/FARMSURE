@@ -13,7 +13,7 @@
     <div th:replace="~{layout/main :: sidebar}"></div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" style="padding-bottom: 100px;">
         <div class="container-fluid">
             <h1 class="h3 mb-4">Farmer Dashboard</h1>
 
@@ -45,7 +45,7 @@
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         Revenue (Monthly)</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                        th:text="'₹' + #numbers.formatDecimal(monthlyRevenue, 0, 'COMMA', 2, 'POINT')">
+                                        th:text="${'₹ ' + #numbers.formatDecimal(monthlyRevenue != null ? monthlyRevenue : 0, 0, 'COMMA', 2, 'POINT')}">
                                         ₹0.00</div>
                                 </div>
                                 <div class="col-auto">
@@ -116,7 +116,7 @@
                                     <tbody>
                                         <tr th:each="contract : ${recentContracts}">
                                             <td th:text="${contract.id}">#12345</td>
-                                            <td th:text="${contract.product.name}">Wheat</td>
+                                            <td th:text="${contract.product}">Wheat</td>
                                             <td th:text="${contract.merchant.username}">AgriCorp Ltd</td>
                                             <td>
                                                 <span
@@ -167,6 +167,91 @@
                                 <div class="progress" style="height: 5px;">
                                     <div class="progress-bar bg-primary" style="width: 90%"></div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Contracts Table -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-success">Active Contracts</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Contract ID</th>
+                                            <th>Product</th>
+                                            <th>Merchant</th>
+                                            <th>Status</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="contract : ${activeContracts}">
+                                            <td th:text="${contract.id}">#12345</td>
+                                            <td th:text="${contract.product}">Wheat</td>
+                                            <td th:text="${contract.merchant.username}">Merchant</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td
+                                                th:text="'₹' + #numbers.formatDecimal(contract.basePrice * contract.quantity, 0, 'COMMA', 2, 'POINT')">
+                                                ₹0.00</td>
+                                        </tr>
+                                        <tr th:if="${activeContracts.size()} == 0">
+                                            <td colspan="5" class="text-center">No active contracts.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Contracts to Bid Table -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Open Contracts to Bid</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Contract ID</th>
+                                            <th>Product</th>
+                                            <th>Merchant</th>
+                                            <th>Status</th>
+                                            <th>Base Price</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="contract : ${availableContracts}">
+                                            <td th:text="${contract.id}">#12345</td>
+                                            <td th:text="${contract.product}">Wheat</td>
+                                            <td th:text="${contract.merchant.username}">Merchant</td>
+                                            <td><span class="badge bg-primary">Open</span></td>
+                                            <td
+                                                th:text="'₹ ' + #numbers.formatDecimal(contract.basePrice, 0, 'COMMA', 2, 'POINT')">
+                                                ₹0.00</td>
+                                            <td><a th:if="${contract.status == 'OPEN'}"
+                                                    th:href="@{'/contracts/' + ${contract.id} + '/bid'}"
+                                                    class="btn btn-sm btn-outline-success">Bid</a></td>
+                                        </tr>
+                                        <tr th:if="${availableContracts.size()} == 0">
+                                            <td colspan="6" class="text-center">No open contracts available for bidding.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

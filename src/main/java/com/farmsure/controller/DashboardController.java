@@ -51,7 +51,12 @@ public class DashboardController {
                 model.addAttribute("activeContracts",
                         activeContracts != null ? activeContracts : java.util.Collections.emptyList());
 
+                // Show contracts with status OPEN and NOT assigned to this farmer
                 var availableContracts = contractService.findByStatus("OPEN");
+                if (availableContracts != null) {
+                    availableContracts.removeIf(
+                            c -> c.getAssignedFarmer() != null && c.getAssignedFarmer().getId().equals(user.getId()));
+                }
                 model.addAttribute("availableContracts",
                         availableContracts != null ? availableContracts : java.util.Collections.emptyList());
 

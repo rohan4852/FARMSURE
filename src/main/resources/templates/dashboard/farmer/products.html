@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>My Crops - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">My Crops</h1>
+            <a href="/farmer/products/new" class="btn btn-primary mb-3">Add New Crop</a>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.name}">Wheat</td>
+                                    <td th:text="${product.type}">Grain</td>
+                                    <td th:text="${product.quantity}">100</td>
+                                    <td>
+                                        <a th:href="@{'/farmer/products/' + ${product.id} + '/prices'}"
+                                            class="btn btn-info btn-sm">View Offers</a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${products.size()} == 0">
+                                    <td colspan="4" class="text-center">No crops listed yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>

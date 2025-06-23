@@ -90,4 +90,15 @@ public class BidService {
                     bidRepository.save(b);
                 });
     }
+
+    @Transactional
+    public void declineBid(Long contractId, Long bidId) {
+        Bid bid = bidRepository.findById(bidId)
+                .orElseThrow(() -> new RuntimeException("Bid not found"));
+        if (!bid.getContract().getId().equals(contractId)) {
+            throw new RuntimeException("Bid does not belong to this contract");
+        }
+        bid.setStatus("REJECTED");
+        bidRepository.save(bid);
+    }
 }

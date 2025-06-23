@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Merchant Price Offers - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Merchant Price Offers</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 th:text="${product.name}">Product Name</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Merchant</th>
+                                    <th>Offered Price</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="offer : ${priceOffers}">
+                                    <td th:text="${offer.merchant.username}">Merchant</td>
+                                    <td th:text="${offer.price}">0</td>
+                                    <td th:text="${#dates.format(offer.createdAt, 'dd MMM yyyy')}">01 Jan 2025</td>
+                                </tr>
+                                <tr th:if="${priceOffers.size()} == 0">
+                                    <td colspan="3" class="text-center">No offers yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="/farmer/products" class="btn btn-secondary mt-3">Back to My Crops</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>
