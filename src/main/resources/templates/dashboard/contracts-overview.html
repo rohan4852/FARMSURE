@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Contracts Overview - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Contracts Overview</h1>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Contract ID</th>
+                                    <th>Product</th>
+                                    <th>Merchant</th>
+                                    <th>Status</th>
+                                    <th>Base Price</th>
+                                    <th>Quantity</th>
+                                    <th>Assigned Farmer</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="contract : ${contracts}">
+                                    <td th:text="${contract.id}">#12345</td>
+                                    <td th:text="${contract.product}">Wheat</td>
+                                    <td th:text="${contract.merchant.username}">Merchant</td>
+                                    <td th:text="${contract.status}">Open</td>
+                                    <td th:if="${contract.basePrice != null}"
+                                        th:text="|₹ ${#numbers.formatDecimal(contract.basePrice, 0, 'COMMA', 2, 'POINT')}|">
+                                        ₹0.00</td>
+                                    <td th:unless="${contract.basePrice != null}">N/A</td>
+                                    <td th:text="${contract.quantity}">0</td>
+                                    <td
+                                        th:text="${contract.assignedFarmer != null ? contract.assignedFarmer.username : 'Unassigned'}">
+                                        Unassigned</td>
+                                    <td>
+                                        <a th:if="${contract.status == 'OPEN'}"
+                                            th:href="@{'/contracts/' + ${contract.id} + '/bid'}"
+                                            class="btn btn-sm btn-outline-success">Bid</a>
+                                        <span th:if="${contract.status != 'OPEN'}" class="text-muted">N/A</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${contracts.size()} == 0">
+                                    <td colspan="8" class="text-center">No contracts found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
+</body>
+
+</html>

@@ -218,6 +218,15 @@ public class DashboardController {
     @PreAuthorize("hasAnyRole('FARMER', 'MERCHANT')")
     public String contracts(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
+        User user = userService.findByUsername(authentication.getName());
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MERCHANT"))) {
+            model.addAttribute("contracts", contractService.findByMerchant(user));
+        } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_FARMER"))) {
+            // Only show contracts with status OPEN for farmers
+            model.addAttribute("contracts", contractService.findByStatus("OPEN"));
+        } else {
+            model.addAttribute("contracts", java.util.Collections.emptyList());
+        }
         return "dashboard/contracts-overview";
     }
 

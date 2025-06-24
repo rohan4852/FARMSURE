@@ -272,7 +272,7 @@
             <a class="nav-link" href="/dashboard">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
-            <div th:if="${#authentication.principal.role == 'MERCHANT'}">
+            <div th:if="${#authentication.principal.role == 'ROLE_MERCHANT'}">
                 <a class="nav-link" href="/contracts-overview">
                     <i class="fas fa-file-contract"></i> My Contracts
                 </a>
@@ -298,7 +298,7 @@
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </div>
-            <div th:if="${#authentication.principal.role == 'FARMER'}">
+            <div th:if="${#authentication.principal.role == 'ROLE_FARMER'}">
                 <a class="nav-link" href="/contracts-overview">
                     <i class="fas fa-file-contract"></i> Available Contracts
                 </a>

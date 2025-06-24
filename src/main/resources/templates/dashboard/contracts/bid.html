@@ -1,23 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head>
-    <title>Place Bid</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+<head th:replace="~{layout/main :: head}">
+    <title>Place Bid - FarmSure</title>
 </head>
 
 <body>
-    <h1>Place Bid</h1>
-    <form th:action="@{'/contracts/' + ${contract.id} + '/bid'}" th:object="${bid}" method="post">
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" th:field="*{amount}" step="0.01" required />
-        <br />
-        <label for="proposal">Proposal:</label>
-        <textarea id="proposal" th:field="*{proposal}" required></textarea>
-        <br />
-        <button type="submit">Submit Bid</button>
-    </form>
-    <a th:href="@{'/contracts/' + ${contract.id}}">Back to Contract</a>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0"><i class="fas fa-gavel me-2"></i>Place Your Bid</h4>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{'/contracts/' + ${contract.id} + '/bid'}" th:object="${bid}"
+                                method="post">
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Bid Amount (₹)</label>
+                                    <input type="number" id="amount" th:field="*{amount}" step="0.01" min="0.01"
+                                        class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="proposal" class="form-label">Proposal / Message</label>
+                                    <textarea id="proposal" th:field="*{proposal}" class="form-control" rows="4"
+                                        required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a th:href="@{'/contracts/' + ${contract.id}}" class="btn btn-outline-secondary"><i
+                                            class="fas fa-arrow-left me-1"></i>Back</a>
+                                    <button type="submit" class="btn btn-success"><i
+                                            class="fas fa-paper-plane me-1"></i>Submit
+                                        Bid</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="layout/main :: scripts"></div>
 </body>
 
 </html>
