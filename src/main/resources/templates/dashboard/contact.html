@@ -11,7 +11,31 @@
         <div th:replace="layout/main :: sidebar"></div>
         <div class="main-content">
             <h1>Contact FarmSure</h1>
-            <p>If you have any questions, please contact us at support@farmsure.com.</p>
+            <p><i class="fas fa-envelope"></i> rohanadat4852@gmail.com</p>
+            <div class="card mb-4" style="max-width: 500px;">
+                <div class="card-body">
+                    <h2 class="card-title">Get in Touch</h2>
+                    <form th:action="@{/dashboard/contact}" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <div th:replace="layout/main :: footer"></div>

@@ -127,9 +127,24 @@ public class DashboardController {
         User user = userService.findByUsername(authentication.getName());
         model.addAttribute("username", user.getUsername());
 
-        // Get all open contracts available for bidding
-        model.addAttribute("availableContracts", contractService.findByStatus("OPEN"));
-
+        // Get all contracts where this farmer has placed a bid
+        var myBids = bidService.findByFarmer(user);
+        java.util.Set<Long> contractIds = new java.util.HashSet<>();
+        if (myBids != null) {
+            for (var bid : myBids) {
+                contractIds.add(bid.getContract().getId());
+            }
+        }
+        var allContracts = contractService.findByStatus("OPEN");
+        java.util.List<com.farmsure.model.Contract> placedBidContracts = new java.util.ArrayList<>();
+        if (allContracts != null) {
+            for (var contract : allContracts) {
+                if (contractIds.contains(contract.getId())) {
+                    placedBidContracts.add(contract);
+                }
+            }
+        }
+        model.addAttribute("activeContracts", placedBidContracts);
         return "dashboard/farmer/active-contracts";
     }
 
@@ -222,8 +237,18 @@ public class DashboardController {
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MERCHANT"))) {
             model.addAttribute("contracts", contractService.findByMerchant(user));
         } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_FARMER"))) {
-            // Only show contracts with status OPEN for farmers
-            model.addAttribute("contracts", contractService.findByStatus("OPEN"));
+            // For farmers, show all open contracts, but mark those where the user has
+            // placed a bid
+            var contracts = contractService.findByStatus("OPEN");
+            var myBids = bidService.findByFarmer(user);
+            java.util.Set<Long> placedBidContractIds = new java.util.HashSet<>();
+            if (myBids != null) {
+                for (var bid : myBids) {
+                    placedBidContractIds.add(bid.getContract().getId());
+                }
+            }
+            model.addAttribute("contracts", contracts != null ? contracts : java.util.Collections.emptyList());
+            model.addAttribute("placedBidContractIds", placedBidContractIds);
         } else {
             model.addAttribute("contracts", java.util.Collections.emptyList());
         }

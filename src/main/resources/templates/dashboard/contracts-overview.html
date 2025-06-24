@@ -32,7 +32,17 @@
                                     <td th:text="${contract.id}">#12345</td>
                                     <td th:text="${contract.product}">Wheat</td>
                                     <td th:text="${contract.merchant.username}">Merchant</td>
-                                    <td th:text="${contract.status}">Open</td>
+                                    <td th:text="${contract.status}">
+                                        Open
+                                    </td>
+                                    <td th:if="${#lists.contains(placedBidContractIds, contract.id)}">
+                                        <span class="badge bg-info">Placed Bid</span>
+                                    </td>
+                                    <td th:unless="${#lists.contains(placedBidContractIds, contract.id)}">
+                                        <span th:text="${contract.status}"
+                                            th:classappend="${contract.status == 'OPEN'} ? 'badge bg-success' : 'badge bg-secondary'">
+                                            Open</span>
+                                    </td>
                                     <td th:if="${contract.basePrice != null}"
                                         th:text="|₹ ${#numbers.formatDecimal(contract.basePrice, 0, 'COMMA', 2, 'POINT')}|">
                                         ₹0.00</td>

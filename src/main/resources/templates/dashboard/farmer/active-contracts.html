@@ -27,6 +27,8 @@
                                     <th>Product</th>
                                     <th>Merchant</th>
                                     <th>Status</th>
+                                    <th>Bid Amount</th>
+                                    <th>Proposal</th>
                                     <th>Amount</th>
                                 </tr>
                             </thead>
@@ -35,13 +37,19 @@
                                     <td th:text="${contract.id}">#12345</td>
                                     <td th:text="${contract.product}">Wheat</td>
                                     <td th:text="${contract.merchant.username}">Merchant</td>
-                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td><span class="badge bg-info">Placed Bid</span></td>
+                                    <td
+                                        th:text="${#lists.findFirst(myBids, b -> b.contract.id == contract.id)?.amount}">
+                                        -</td>
+                                    <td
+                                        th:text="${#lists.findFirst(myBids, b -> b.contract.id == contract.id)?.proposal}">
+                                        -</td>
                                     <td
                                         th:text="'₹' + #numbers.formatDecimal(contract.basePrice * contract.quantity, 0, 'COMMA', 2, 'POINT')">
                                         ₹0.00</td>
                                 </tr>
                                 <tr th:if="${activeContracts.size()} == 0">
-                                    <td colspan="5" class="text-center">No active contracts.</td>
+                                    <td colspan="7" class="text-center">No active contracts.</td>
                                 </tr>
                             </tbody>
                         </table>
