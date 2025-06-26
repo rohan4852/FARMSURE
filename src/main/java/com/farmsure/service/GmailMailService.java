@@ -1,16 +1,16 @@
 package com.farmsure.service;
 
 import org.springframework.stereotype.Service;
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import java.util.Properties;
 
 @Service
 public class GmailMailService {
     // Use environment variables or Spring Boot config for real deployment
     private static final String GMAIL_USERNAME = "rohanadat4852@gmail.com";
-    private static final String GMAIL_APP_PASSWORD = "YOUR_GMAIL_APP_PASSWORD"; // Use App Password, not your real
-                                                                                // password
+    private static final String GMAIL_APP_PASSWORD = "dnqp uqwi cnue xkdx"; // Use App Password, not your real
+                                                                            // password
 
     public void sendMail(String to, String subject, String body) throws MessagingException {
         Properties props = new Properties();
@@ -19,7 +19,7 @@ public class GmailMailService {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(GMAIL_USERNAME, GMAIL_APP_PASSWORD);
             }
