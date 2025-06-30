@@ -1,0 +1,2 @@
+ALTER TABLE messages
+ADD COLUMN status VARCHAR(20) DEFAULT 'sent' NOT NULL;

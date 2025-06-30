@@ -24,7 +24,15 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    private String attachmentFileName;
+
+    private String attachmentFileType;
+
+    private String attachmentFileUrl;
+
     private boolean read = false;
+
+    private String status = "sent";
 
     private LocalDateTime createdAt;
 
@@ -74,12 +82,44 @@ public class Message {
         this.content = content;
     }
 
+    public String getAttachmentFileName() {
+        return attachmentFileName;
+    }
+
+    public void setAttachmentFileName(String attachmentFileName) {
+        this.attachmentFileName = attachmentFileName;
+    }
+
+    public String getAttachmentFileType() {
+        return attachmentFileType;
+    }
+
+    public void setAttachmentFileType(String attachmentFileType) {
+        this.attachmentFileType = attachmentFileType;
+    }
+
+    public String getAttachmentFileUrl() {
+        return attachmentFileUrl;
+    }
+
+    public void setAttachmentFileUrl(String attachmentFileUrl) {
+        this.attachmentFileUrl = attachmentFileUrl;
+    }
+
     public boolean isRead() {
         return read;
     }
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {

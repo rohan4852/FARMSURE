@@ -61,4 +61,9 @@ public class UserService implements UserDetailsService {
         // Optionally encode password if changed, but for profile/settings just save
         return userRepository.save(user);
     }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

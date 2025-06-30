@@ -27,9 +27,10 @@
                                     <th>Product</th>
                                     <th>Merchant</th>
                                     <th>Status</th>
-                                    <th>Bid Amount</th>
-                                    <th>Proposal</th>
-                                    <th>Amount</th>
+                                    <th>Base Price</th>
+                                    <th>Quantity</th>
+                                    <th>Assigned Farmer</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,19 +38,23 @@
                                     <td th:text="${contract.id}">#12345</td>
                                     <td th:text="${contract.product}">Wheat</td>
                                     <td th:text="${contract.merchant.username}">Merchant</td>
-                                    <td><span class="badge bg-info">Placed Bid</span></td>
+                                    <td>
+                                        <span class="badge bg-info" th:text="${contract.status}">Status</span>
+                                    </td>
                                     <td
-                                        th:text="${#lists.findFirst(myBids, b -> b.contract.id == contract.id)?.amount}">
-                                        -</td>
-                                    <td
-                                        th:text="${#lists.findFirst(myBids, b -> b.contract.id == contract.id)?.proposal}">
-                                        -</td>
-                                    <td
-                                        th:text="'₹' + #numbers.formatDecimal(contract.basePrice * contract.quantity, 0, 'COMMA', 2, 'POINT')">
+                                        th:text="${contract.basePrice != null ? '₹' + #numbers.formatDecimal(contract.basePrice, 0, '.', 2, ',') : 'N/A'}">
                                         ₹0.00</td>
+                                    <td th:text="${contract.quantity}">0</td>
+                                    <td
+                                        th:text="${contract.assignedFarmer != null ? contract.assignedFarmer.username : 'Unassigned'}">
+                                        Unassigned</td>
+                                    <td>
+                                        <a th:href="@{'/contracts/view/' + ${contract.id}}"
+                                            class="btn btn-primary btn-sm">View</a>
+                                    </td>
                                 </tr>
                                 <tr th:if="${activeContracts.size()} == 0">
-                                    <td colspan="7" class="text-center">No active contracts.</td>
+                                    <td colspan="8" class="text-center">No active contracts.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -60,10 +65,10 @@
     </div>
 
     <!-- Footer -->
-    <div th:replace="layout/main :: footer"></div>
+    <div th:replace="~{layout/main :: footer}"></div>
 
     <!-- Scripts -->
-    <div th:replace="layout/main :: scripts"></div>
+    <div th:replace="~{layout/main :: scripts}"></div>
 </body>
 
 </html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-us" class="fc-widget-small multi-widget-ui">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <title>Messages - FarmSure</title>
+    <link rel="stylesheet" href="/static/css/instagram-chat.css" />
+    <script src="/static/js/instagram-chat.js" defer></script>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="d-hotline h-btn animated zoomIn faster dn h-open" tabindex="0" role="button"
+            aria-label="Close widget">
+            <div id="chat-icon"></div>
+        </div>
+        <div class="hotline-launcher h-open" tabindex="-1" role="dialog">
+            <div class="viewport h-chat-custom h-open">
+                <div class="widget-status animated fadeInUp faster" aria-live="polite">
+                    <div class="help-text dn"></div>
+                </div>
+                <div class="h-conv ember-view">
+                    <div class="fc-conversation-view">
+                        <div class="h-header single-channel-header">
+                            <div class="title fadeIn solid">
+                                <!-- <div class="logo">
+    <img class="animated zoomIn faster" src="/static/images/logo.png" alt="Logo" />
+</div> -->
+                                <div class="channel-info animated fadeIn faster channel-info-compact-width">
+                                    <h1 class="channel-title">Inbox</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body no-articles single-channel-section">
+                            <div class="h-chat-window">
+                                <div class="cal-picker-maximized hide-cal-picker"></div>
+                                <div class="expand">
+                                    <div class="fc-agent-profile shadow">
+                                        <div class="u-profile-info">
+                                            <div class="user-details agent-section agent-bio">
+                                                <!-- <div class="u-agent-avatar">
+    <span class="avatar-content-wrap agent-circle">
+        <img src="/static/images/user-avatar.jpg"
+            alt="Agent profile picture" />
+    </span>
+</div> -->
+                                                <div class="u-agent-info">
+                                                    <p class="u-agent-name" th:text="${chatPartnerName}">Chat Partner
+                                                    </p>
+                                                    <p class="u-agent-designation">
+                                                        <!-- <img class="designation-icon" src="/static/images/briefcase.svg"
+                                                            alt="Designation icon" />
+                                                        Active now
+                                                    </p> -->
+                                                </div>
+                                            </div>
+                                            <!-- <div class="bio-details">
+                                                <div class="u-agent-bio">
+                                                    <p>Available to chat</p>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-conv-chat h-theme-bg-1 animated fadeInUp speed scroll-section profile"
+                                    tabindex="0" role="status" aria-live="assertive" aria-relevant="additions"
+                                    aria-atomic="false">
+                                    <ul id="chatMessages" class="fc-app-conversation-message ember-view">
+                                        <li th:each="msg : ${messages}"
+                                            th:classappend="${msg.sender.id == currentUserId} ? 'agent-msg' : 'user-msg'"
+                                            class="fc-ui-message message-container ember-view">
+                                            <div class="h-chat">
+                                                <!-- Profile image removed as per user request -->
+                                                <!-- <div class="agent-pic" aria-hidden="true">
+            <img th:src="@{/static/images/user-avatar.jpg}" alt="User avatar" />
+        </div> -->
+                                                <span class="time"
+                                                    th:text="${#dates.format(msg.createdAt, 'HH:mm')}">12:00</span>
+                                                <div class="h-conv multiple">
+                                                    <div class="h-comment">
+                                                        <div class="fc-ui-unity-message-bubble">
+                                                            <div class="h-message-text" th:text="${msg.content}">Message
+                                                                content</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="h-reply-wrapper">
+                                    <div class="h-reply">
+                                        <div contenteditable="true" id="messageInput"
+                                            class="editable ce-textarea emoji editor-placeholder desktop-browser"
+                                            data-placeholder="Reply here..." placeholder="Reply here..."
+                                            aria-label="Type here to reply and please press enter to send the message"
+                                            tabindex="0"></div>
+                                        <input accept="file" id="fileUploadInput" class="ember-text-field"
+                                            type="file" />
+                                        <a href="#" class="h-reply-attach" role="button" aria-label="File attachment">
+                                            <i class="icons icon-ic_attachment"></i>
+                                        </a>
+                                        <button id="sendButton" class="chat-btn" aria-label="Send message">
+                                            <i class="fa fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <span aria-live="assertive" class="aria-live-region">Loading past conversations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="~{layout/main :: footer}"></div>
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

@@ -46,4 +46,8 @@ public class MessageService {
     public void deleteMessage(Long id) {
         messageRepository.deleteById(id);
     }
+
+    public java.util.List<Message> getConversation(User user1, User user2) {
+        return messageRepository.findConversation(user1, user2);
+    }
 }

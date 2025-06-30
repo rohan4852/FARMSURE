@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head th:replace="~{layout/main :: head}">
-    <title>Contracts Overview - FarmSure</title>
+    <title>Marketplace - FarmSure</title>
 </head>
 
 <body>
@@ -10,61 +10,50 @@
     <div th:replace="~{layout/main :: sidebar}"></div>
     <div class="main-content">
         <div class="container-fluid">
-            <h1 class="h3 mb-4">Contracts Overview</h1>
+            <h1 class="h3 mb-4">Marketplace</h1>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Contract ID</th>
+                                    <th>Title</th>
                                     <th>Product</th>
                                     <th>Merchant</th>
                                     <th>Status</th>
-                                    <th>Bid Status</th>
                                     <th>Base Price</th>
                                     <th>Quantity</th>
-                                    <th>Assigned Farmer</th>
+                                    <th>Delivery Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="contract : ${contracts}">
                                     <td th:text="${contract.id}">#12345</td>
-                                    <td th:text="${contract.product}">Wheat</td>
-                                    <td th:text="${contract.merchant.username}">Merchant</td>
+                                    <td th:text="${contract.title}">Contract Title</td>
+                                    <td th:text="${contract.product}">Product</td>
+                                    <td
+                                        th:text="${contract.merchant.fullName != null ? contract.merchant.fullName : contract.merchant.username}">
+                                        Merchant</td>
                                     <td>
                                         <span th:text="${contract.status}"
                                             th:classappend="${contract.status == 'OPEN'} ? 'badge bg-success' : 'badge bg-secondary'">
                                             Status
                                         </span>
                                     </td>
-                                    <td>
-                                        <span th:if="${#lists.contains(placedBidContractIds, contract.id)}"
-                                            class="badge bg-info">Placed Bid</span>
-                                        <span th:unless="${#lists.contains(placedBidContractIds, contract.id)}">-</span>
-                                    </td>
                                     <td
                                         th:text="|₹ ${#numbers.formatDecimal(contract.basePrice, 0, 'COMMA', 2, 'POINT')}|">
                                         ₹0.00</td>
                                     <td th:text="${contract.quantity}">0</td>
-                                    <td
-                                        th:text="${contract.assignedFarmer != null ? contract.assignedFarmer.username : 'Unassigned'}">
-                                        Unassigned</td>
+                                    <td th:text="${contract.deliveryDate}">N/A</td>
                                     <td>
-                                        <a th:if="${userRole == 'ROLE_FARMER' and contract.status == 'OPEN' and !#lists.contains(placedBidContractIds, contract.id)}"
-                                            th:href="@{'/contracts/' + ${contract.id} + '/bid'}"
-                                            class="btn btn-sm btn-outline-success">Bid</a>
-                                        <a th:if="${userRole == 'ROLE_MERCHANT'}"
-                                            th:href="@{'/contracts/' + ${contract.id} + '/view'}"
+                                        <a th:href="@{'/contracts/' + ${contract.id} + '/view'}"
                                             class="btn btn-sm btn-primary">View</a>
-                                        <span
-                                            th:if="${(userRole == 'ROLE_FARMER' and (contract.status != 'OPEN' or #lists.contains(placedBidContractIds, contract.id))) or (userRole != 'ROLE_FARMER' and userRole != 'ROLE_MERCHANT')}"
-                                            class="text-muted">N/A</span>
                                     </td>
                                 </tr>
-                                <tr th:if="${contracts.size()} == 0">
-                                    <td colspan="9" class="text-center">No contracts found.</td>
+                                <tr th:if="${contracts != null and contracts.size() == 0}">
+                                    <td colspan="9" class="text-center">No contracts available in the marketplace.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -73,8 +62,8 @@
             </div>
         </div>
     </div>
-    <div th:replace="layout/main :: footer"></div>
-    <div th:replace="layout/main :: scripts"></div>
+    <div th:replace="~{layout/main :: footer}"></div>
+    <div th:replace="~{layout/main :: scripts}"></div>
 </body>
 
 </html>

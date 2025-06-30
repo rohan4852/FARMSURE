@@ -113,7 +113,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="contract : ${myContracts}">
+                                        <tr th:each="contract : ${activeContracts}">
                                             <td th:text="${contract.id}"></td>
                                             <td th:text="${contract.product}"></td>
                                             <td th:text="${contract.quantity}"></td>
@@ -164,7 +164,7 @@
                                                     method="post" style="display:inline;">
                                                     <button type="submit" class="btn btn-danger btn-sm">Decline</button>
                                                 </form>
-                                                <a th:href="@{'/messages?to=' + ${bid.farmer.username}}"
+                                                <a th:href="@{'/messages/chat?with=' + ${bid.farmer.id}}"
                                                     class="btn btn-info btn-sm">Contact</a>
                                             </td>
                                         </tr>
