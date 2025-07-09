@@ -118,18 +118,26 @@ public class MessageController {
     public String chat(@AuthenticationPrincipal User currentUser,
             @RequestParam("with") Long chatPartnerId,
             Model model) {
-        User chatPartner = userService.findById(chatPartnerId);
-        if (chatPartner == null) {
-            return "error/404";
+        try {
+            java.util.Optional<User> chatPartnerOptional = userService.findById(chatPartnerId);
+            if (chatPartnerOptional.isEmpty()) {
+                return "error/404";
+            }
+            User chatPartner = chatPartnerOptional.get();
+            // Fetch messages between currentUser and chatPartner
+            java.util.List<com.farmsure.model.Message> messages = messageService.getConversation(currentUser,
+                    chatPartner);
+            model.addAttribute("messages", messages);
+            model.addAttribute("currentUserId", currentUser.getId());
+            model.addAttribute("chatPartnerId", chatPartner.getId());
+            model.addAttribute("chatPartnerName",
+                    chatPartner.getFullName() != null ? chatPartner.getFullName() : chatPartner.getUsername());
+            return "dashboard/messages/chat";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Internal Server Error");
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/error";
         }
-        // Fetch messages between currentUser and chatPartner
-        java.util.List<com.farmsure.model.Message> messages = messageService.getConversation(currentUser, chatPartner);
-        model.addAttribute("messages", messages);
-        model.addAttribute("currentUserId", currentUser.getId());
-        model.addAttribute("chatPartnerId", chatPartner.getId());
-        model.addAttribute("chatPartnerName",
-                chatPartner.getFullName() != null ? chatPartner.getFullName() : chatPartner.getUsername());
-        return "dashboard/messages/chat";
     }
-
 }

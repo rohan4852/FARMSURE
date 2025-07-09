@@ -22,7 +22,7 @@ A modern contract farming management system built with Spring Boot that connects
 ---
 
 ## Features
-- 🔐 Role-based authentication (Farmer, Merchant, Admin)
+- 🔐 Role-based authentication (Farmer, Merchant)
 - 📝 Contract creation and management
 - 💰 Bidding system
 - 💬 Messaging system
@@ -49,6 +49,7 @@ src/
 │   ├── java/com/farmsure/
 │   │   ├── config/          # Configuration classes
 │   │   ├── controller/      # MVC Controllers
+│   │   │   └── InfoController.java  # Serves public info pages like privacy and terms
 │   │   ├── model/           # Entity classes
 │   │   ├── repository/      # Data repositories
 │   │   ├── service/         # Business logic
@@ -56,7 +57,7 @@ src/
 │   └── resources/
 │       ├── db/migration/    # Flyway migrations
 │       ├── static/          # CSS, JS, images
-│       ├── templates/       # Thymeleaf templates
+│       ├── templates/       # Thymeleaf templates including info/privacy.html and info/terms.html
 │       └── application.properties
 ├── test/
 │   └── java/com/farmsure/   # Unit and integration tests
@@ -110,6 +111,12 @@ pom.xml                      # Maven project file
      | Merchant | mike_merchant | merchant123 |
      | Merchant | lisa_merchant | merchant123 |
      | Admin    | admin_user    | admin123    |
+
+6. **Public Information Pages**
+   - Privacy Policy: Accessible at `/info/privacy` without login.
+   - Terms of Service: Accessible at `/info/terms` without login.
+   - Both pages include complete UI with header, footer, and navigation.
+   - Footer includes links to Privacy Policy and Terms of Service on all pages including the register page.
 6. **Troubleshooting**
    - If migrations fail, check Flyway logs and database permissions.
    - If the app won’t start, verify Java 17+, Maven, and MySQL are installed and running.
@@ -154,6 +161,7 @@ The application supports both light and dark themes:
 - Session management
 - CSRF protection
 - Secure form submissions
+- Public access allowed for `/info/**` pages including privacy and terms
 
 ## Troubleshooting
 1. **Database Connection Issues**

@@ -36,6 +36,6 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         model.addAttribute("errorTitle", errorTitle);
         model.addAttribute("errorMessage", errorMessage);
 
-        return "error/error";
+        return "error";
     }
 }

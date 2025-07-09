@@ -63,6 +63,10 @@ public class SecurityConfig {
                         .permitAll()
                         .successHandler(successHandler)
                         .failureUrl("/login?error=true"))
+                .rememberMe(rememberMe -> rememberMe
+                        .key("uniqueAndSecret")
+                        .userDetailsService(userService)
+                        .tokenValiditySeconds(1209600)) // 14 days
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout=true")

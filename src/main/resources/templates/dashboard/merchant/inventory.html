@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Inventory - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+
+    <!-- Sidebar -->
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Inventory</h1>
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">My Inventory Items</h6>
+                </div>
+                <div class="card-body">
+                    <p th:if="${#lists.isEmpty(inventoryItems)}">No inventory items found.</p>
+                    <div th:if="${!#lists.isEmpty(inventoryItems)}" class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${inventoryItems}">
+                                    <td th:text="${item.name}">Sample Item</td>
+                                    <td th:text="${item.quantity}">0</td>
+                                    <td th:text="${item.description}">Description</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" disabled>Edit</button>
+                                        <button class="btn btn-sm btn-danger" disabled>Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{layout/main :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

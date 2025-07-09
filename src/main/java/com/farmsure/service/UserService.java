@@ -1,69 +1,65 @@
 package com.farmsure.service;
 
+import com.farmsure.model.Contract;
 import com.farmsure.model.User;
 import com.farmsure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
+    // Implement the required method from UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 
-    public User registerUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (user.getRole() == null || (!user.getRole().equals("FARMER") && !user.getRole().equals("MERCHANT"))) {
-            throw new RuntimeException("Invalid role selected");
-        }
+    // Other existing methods...
 
-        // Add ROLE_ prefix if not present
-        if (!user.getRole().startsWith("ROLE_")) {
-            user.setRole("ROLE_" + user.getRole());
+    public List<User> getFarmersByContracts(List<Contract> contracts) {
+        List<User> farmers = new ArrayList<>();
+        for (Contract contract : contracts) {
+            User farmer = contract.getAssignedFarmer();
+            if (farmer != null && !farmers.contains(farmer)) {
+                farmers.add(farmer);
+            }
         }
-
-        // Encode password and save
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return farmers;
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public java.util.Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
-    public List<User> getAllUsers() {
+    public java.util.List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    public java.util.Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
     public User save(User user) {
-        // Optionally encode password if changed, but for profile/settings just save
         return userRepository.save(user);
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public User registerUser(User user) {
+        // Add registration logic here if needed (e.g., password encoding)
+        return save(user);
     }
 }

@@ -53,4 +53,9 @@ public class InfoController {
     public String privacy(Model model) {
         return "info/privacy";
     }
+
+    @GetMapping("/terms")
+    public String terms(Model model) {
+        return "info/terms";
+    }
 }

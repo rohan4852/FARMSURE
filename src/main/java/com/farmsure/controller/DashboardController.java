@@ -36,10 +36,192 @@ public class DashboardController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/dashboard")
+    public String dashboardRedirect(@RequestParam(name = "type", required = false) String type) {
+        if ("farmer".equalsIgnoreCase(type)) {
+            return "redirect:/dashboard/farmer/index";
+        } else if ("merchant".equalsIgnoreCase(type)) {
+            return "redirect:/dashboard/merchant/index";
+        } else {
+            return "redirect:/"; // or some default page
+        }
+    }
+
+    @GetMapping("/dashboard/farmer/index")
+    public String farmerDashboard(Model model, Authentication authentication) {
+        try {
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
+            model.addAttribute("username", user.getUsername());
+
+            // Get all contracts where this farmer has placed a bid
+            var myBids = bidService.findByFarmer(user);
+            java.util.Set<Long> contractIds = new java.util.HashSet<>();
+            java.util.Map<Long, com.farmsure.model.Bid> bidMap = new java.util.HashMap<>();
+            if (myBids != null) {
+                for (var bid : myBids) {
+                    if (bid.getContract() != null && bid.getContract().getId() != null) {
+                        contractIds.add(bid.getContract().getId());
+                        bidMap.put(bid.getContract().getId(), bid);
+                    }
+                }
+            }
+
+            var allContracts = contractService.findByStatus("OPEN");
+            java.util.List<com.farmsure.model.Contract> placedBidContracts = new java.util.ArrayList<>();
+            if (allContracts != null) {
+                for (var contract : allContracts) {
+                    if (contract != null && contract.getId() != null && contractIds.contains(contract.getId())) {
+                        placedBidContracts.add(contract);
+                    }
+                }
+            }
+
+            // Also add contracts assigned to this farmer (accepted contracts)
+            var assignedContracts = contractService.findByAssignedFarmer(user);
+            if (assignedContracts != null) {
+                for (var contract : assignedContracts) {
+                    if (!placedBidContracts.contains(contract)) {
+                        placedBidContracts.add(contract);
+                    }
+                }
+            }
+
+            // Calculate total revenue for farmer (sum of basePrice * quantity for assigned
+            // contracts)
+            double totalRevenue = 0.0;
+            if (assignedContracts != null) {
+                for (var contract : assignedContracts) {
+                    if (contract.getBasePrice() != null && contract.getQuantity() != null) {
+                        totalRevenue += contract.getBasePrice() * contract.getQuantity();
+                    }
+                }
+            }
+
+            // Count active merchants (distinct merchants in assigned contracts)
+            java.util.Set<User> activeMerchantsSet = new java.util.HashSet<>();
+            if (assignedContracts != null) {
+                for (var contract : assignedContracts) {
+                    if (contract.getMerchant() != null) {
+                        activeMerchantsSet.add(contract.getMerchant());
+                    }
+                }
+            }
+
+            model.addAttribute("activeContracts", placedBidContracts);
+            model.addAttribute("bidMap", bidMap);
+            model.addAttribute("totalRevenue", totalRevenue);
+            model.addAttribute("activeMerchants", activeMerchantsSet.size());
+            model.addAttribute("totalBids", myBids != null ? myBids.size() : 0);
+
+            // Add null checks for activeContracts and bidMap in model to avoid Thymeleaf
+            // errors
+            if (placedBidContracts == null) {
+                model.addAttribute("activeContracts", java.util.Collections.emptyList());
+            }
+            if (bidMap == null) {
+                model.addAttribute("bidMap", java.util.Collections.emptyMap());
+            }
+
+            return "dashboard/farmer/index";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Internal Server Error");
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/error";
+        }
+    }
+
+    @GetMapping("/dashboard/merchant/index")
+    public String merchantDashboard(Model model, Authentication authentication) {
+        try {
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
+            model.addAttribute("username", user.getUsername());
+
+            // Fetch active contracts for this merchant
+            var activeContracts = contractService.findByMerchant(user);
+            model.addAttribute("activeContracts",
+                    activeContracts != null ? activeContracts : java.util.Collections.emptyList());
+
+            // Calculate total investment (sum of contract base prices * quantities)
+            double totalInvestment = 0.0;
+            if (activeContracts != null) {
+                for (var contract : activeContracts) {
+                    if (contract.getBasePrice() != null && contract.getQuantity() != null) {
+                        totalInvestment += contract.getBasePrice() * contract.getQuantity();
+                    }
+                }
+            }
+            model.addAttribute("totalInvestment", totalInvestment);
+
+            // Count active farmers (distinct assigned farmers in active contracts)
+            java.util.Set<User> activeFarmersSet = new java.util.HashSet<>();
+            if (activeContracts != null) {
+                for (var contract : activeContracts) {
+                    if (contract.getAssignedFarmer() != null) {
+                        activeFarmersSet.add(contract.getAssignedFarmer());
+                    }
+                }
+            }
+            model.addAttribute("activeFarmers", activeFarmersSet.size());
+
+            // Count active bids (bids placed on merchant's contracts with status 'ACTIVE'
+            // or similar)
+            int activeBidsCount = 0;
+            if (activeContracts != null) {
+                for (var contract : activeContracts) {
+                    var bids = bidService.findByContract(contract);
+                    if (bids != null) {
+                        for (var bid : bids) {
+                            if ("ACTIVE".equalsIgnoreCase(bid.getStatus())) {
+                                activeBidsCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            model.addAttribute("activeBids", activeBidsCount);
+
+            // Fetch pending bids (bids with status 'PENDING' on merchant's contracts)
+            java.util.List<com.farmsure.model.Bid> pendingBids = new java.util.ArrayList<>();
+            if (activeContracts != null) {
+                for (var contract : activeContracts) {
+                    var bids = bidService.findByContract(contract);
+                    if (bids != null) {
+                        for (var bid : bids) {
+                            if ("PENDING".equalsIgnoreCase(bid.getStatus()) && bid.getFarmer() != null) {
+                                pendingBids.add(bid);
+                            }
+                        }
+                    }
+                }
+            }
+            model.addAttribute("pendingBids", pendingBids);
+
+            return "dashboard/merchant/index";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", 500);
+            model.addAttribute("errorTitle", "Internal Server Error");
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/error";
+        }
+    }
+
     @GetMapping("/contracts/{id}/view")
     @PreAuthorize("hasAnyRole('FARMER', 'MERCHANT')")
     public String viewContract(@PathVariable("id") Long id, Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
+        java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+        if (optionalUser.isEmpty()) {
+            return "error/404";
+        }
+        User user = optionalUser.get();
         var contract = contractService.getContractById(id);
         if (contract == null) {
             model.addAttribute("statusCode", 404);
@@ -52,102 +234,15 @@ public class DashboardController {
         return "dashboard/contracts/view";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(@RequestParam(required = false) String type, Model model, Authentication authentication) {
-        try {
-            User user = userService.findByUsername(authentication.getName());
-            if (user == null) {
-                return "error/404";
-            }
-            model.addAttribute("username", user.getUsername());
-
-            // Determine the user's role and redirect to appropriate dashboard
-            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_FARMER"))) {
-                // Add farmer-specific data
-                var activeContracts = contractService.findByAssignedFarmer(user);
-                model.addAttribute("activeContracts",
-                        activeContracts != null ? activeContracts : java.util.Collections.emptyList());
-
-                // Show contracts with status OPEN and NOT assigned to this farmer
-                var availableContracts = contractService.findByStatus("OPEN");
-                if (availableContracts != null) {
-                    availableContracts.removeIf(
-                            c -> c.getAssignedFarmer() != null && c.getAssignedFarmer().getId().equals(user.getId()));
-                }
-                model.addAttribute("availableContracts",
-                        availableContracts != null ? availableContracts : java.util.Collections.emptyList());
-
-                // Add recent contracts for farmer dashboard (excluding demo data)
-                var recentContracts = contractService.findRecentContractsByFarmer(user);
-                model.addAttribute("recentContracts",
-                        recentContracts != null ? recentContracts : java.util.Collections.emptyList());
-
-                var myBids = bidService.findByFarmer(user);
-                model.addAttribute("myBids", myBids != null ? myBids : java.util.Collections.emptyList());
-
-                // Add revenue (monthly)
-                double revenue = transactionService.getMonthlyRevenueByFarmer(user);
-                model.addAttribute("monthlyRevenue", revenue);
-
-                // Add products listed count
-                var products = productService.getProductsByFarmer(user);
-                model.addAttribute("productsCount", products != null ? products.size() : 0);
-
-                // Add pending bids count
-                long pendingBidsCount = 0;
-                if (myBids != null) {
-                    pendingBidsCount = myBids.stream()
-                            .filter(bid -> "PENDING".equalsIgnoreCase(bid.getStatus()))
-                            .count();
-                }
-                model.addAttribute("pendingBidsCount", pendingBidsCount);
-
-                return "dashboard/farmer/index";
-            } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MERCHANT"))) {
-                // Add merchant-specific data
-                var myContracts = contractService.findByMerchant(user);
-                var activeContracts = contractService.findByMerchantAndStatus(user, "ASSIGNED");
-                var pendingBids = bidService.findPendingByMerchant(user);
-                // var allBids = bidService.findByMerchant(user);
-                int activeFarmers = (int) myContracts.stream().filter(c -> c.getAssignedFarmer() != null)
-                        .map(c -> c.getAssignedFarmer().getId()).distinct().count();
-                double totalInvestment = myContracts.stream()
-                        .mapToDouble(c -> c.getBasePrice() != null
-                                ? c.getBasePrice() * (c.getQuantity() != null ? c.getQuantity() : 0)
-                                : 0)
-                        .sum();
-                // int activeBids = (allBids instanceof java.util.Collection) ?
-                // ((java.util.Collection<?>) allBids).size()
-                // : 0;
-                int activeBids = (pendingBids instanceof java.util.Collection)
-                        ? ((java.util.Collection<?>) pendingBids).size()
-                        : 0;
-                model.addAttribute("myContracts", activeContracts);
-                model.addAttribute("activeContracts", activeContracts);
-                model.addAttribute("pendingBids", pendingBids);
-                model.addAttribute("activeFarmers", activeFarmers);
-                model.addAttribute("totalInvestment", totalInvestment);
-                model.addAttribute("activeBids", activeBids);
-                // TODO: Add real messages if needed
-                return "dashboard/merchant/index";
-            } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                return "dashboard/admin/index";
-            }
-
-            return "dashboard/index";
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("statusCode", 500);
-            model.addAttribute("errorTitle", "Internal Server Error");
-            model.addAttribute("errorMessage", e.getMessage());
-            return "error/error";
-        }
-    }
-
     @GetMapping("/farmer/active-contracts")
+    @PreAuthorize("hasRole('FARMER')")
     public String farmerActiveContracts(Model model, Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName());
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
             model.addAttribute("username", user.getUsername());
 
             // Get all contracts where this farmer has placed a bid
@@ -187,7 +282,11 @@ public class DashboardController {
     @GetMapping("/profile")
     public String profile(Model model, Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName());
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
             model.addAttribute("username", authentication.getName());
             model.addAttribute("user", user);
             return "dashboard/profile";
@@ -202,7 +301,11 @@ public class DashboardController {
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute("user") User updatedUser, Authentication authentication, Model model) {
         try {
-            User user = userService.findByUsername(authentication.getName());
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
             user.setEmail(updatedUser.getEmail());
             user.setFullName(updatedUser.getFullName());
             user.setPhone(updatedUser.getPhone());
@@ -221,7 +324,11 @@ public class DashboardController {
     @GetMapping("/settings")
     public String settings(Model model, Authentication authentication) {
         try {
-            User user = userService.findByUsername(authentication.getName());
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
             model.addAttribute("username", authentication.getName());
             model.addAttribute("user", user);
             return "dashboard/settings";
@@ -242,7 +349,11 @@ public class DashboardController {
             Authentication authentication,
             Model model) {
         try {
-            User user = userService.findByUsername(authentication.getName());
+            java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+            if (optionalUser.isEmpty()) {
+                return "error/404";
+            }
+            User user = optionalUser.get();
             user.setThemePreference(themePreference);
             user.setLanguagePreference(languagePreference);
             user.setEmailNotifications(emailNotifications != null ? emailNotifications : false);
@@ -269,7 +380,11 @@ public class DashboardController {
     @PreAuthorize("hasAnyRole('FARMER', 'MERCHANT')")
     public String contracts(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
-        User user = userService.findByUsername(authentication.getName());
+        java.util.Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+        if (optionalUser.isEmpty()) {
+            return "error/404";
+        }
+        User user = optionalUser.get();
         String userRole = "";
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MERCHANT"))) {
             userRole = "ROLE_MERCHANT";
@@ -303,7 +418,7 @@ public class DashboardController {
         return "redirect:/messages/inbox";
     }
 
-    @GetMapping("/reports")
+    @GetMapping("/dashboard/reports")
     @PreAuthorize("hasRole('ADMIN')")
     public String reports(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());

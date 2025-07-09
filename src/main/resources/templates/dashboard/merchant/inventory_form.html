@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Inventory Form - FarmSure</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+
+    <!-- Sidebar -->
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4" th:text="${inventoryItem.id == null} ? 'Add Inventory Item' : 'Edit Inventory Item'">
+                Inventory Form</h1>
+
+            <form
+                th:action="@{${inventoryItem.id == null} ? '/inventory/add' : '/inventory/edit/' + ${inventoryItem.id}}"
+                th:object="${inventoryItem}" method="post">
+                <div class="mb-3">
+                    <label for="contract" class="form-label">Contract</label>
+                    <select id="contract" name="contract.id" class="form-select" required>
+                        <option value="" disabled selected>Select Contract</option>
+                        <option th:each="contract : ${contracts}" th:value="${contract.id}" th:text="${contract.title}"
+                            th:selected="${inventoryItem.contract != null} ? ${contract.id} == ${inventoryItem.contract.id} : false">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="farmer" class="form-label">Farmer</label>
+                    <select id="farmer" name="farmer.id" class="form-select" required>
+                        <option value="" disabled selected>Select Farmer</option>
+                        <option th:each="farmer : ${farmers}" th:value="${farmer.id}" th:text="${farmer.fullName}"
+                            th:selected="${inventoryItem.farmer != null} ? ${farmer.id} == ${inventoryItem.farmer.id} : false">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input type="text" id="productName" th:field="*{productName}" class="form-control"
+                        placeholder="Enter product name" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="quality" class="form-label">Quality</label>
+                    <input type="text" id="quality" th:field="*{quality}" class="form-control"
+                        placeholder="Enter quality details" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" step="0.01" id="weight" th:field="*{weight}" class="form-control"
+                        placeholder="Enter weight" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" id="quantity" th:field="*{quantity}" class="form-control"
+                        placeholder="Enter quantity" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="storageLocation" class="form-label">Storage Location</label>
+                    <input type="text" id="storageLocation" th:field="*{storageLocation}" class="form-control"
+                        placeholder="Enter storage location" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="dispatchDate" class="form-label">Dispatch Date</label>
+                    <input type="datetime-local" id="dispatchDate" th:field="*{dispatchDate}" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" th:field="*{description}" class="form-control" rows="3"
+                        placeholder="Enter description"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="/inventory" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{layout/main :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

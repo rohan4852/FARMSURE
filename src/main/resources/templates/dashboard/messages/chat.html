@@ -1,14 +1,175 @@
 <!DOCTYPE html>
-<html lang="en-us" class="fc-widget-small multi-widget-ui">
+<html xmlns:th="http://www.thymeleaf.org" lang="en-us">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
-    <title>Messages - FarmSure</title>
-    <link rel="stylesheet" href="/static/css/instagram-chat.css" />
-    <script src="/static/js/instagram-chat.js" defer></script>
+<head th:replace="~{layout/main :: head}">
+    <title>Chat - FarmSure</title>
+    <style>
+        /* Basic reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f8fa;
+        }
+
+        .main-content {
+            display: flex;
+            height: 90vh;
+            max-width: 900px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar with chat partner info */
+        .chat-sidebar {
+            width: 250px;
+            border-right: 1px solid #ddd;
+            background-color: #fafafa;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-sidebar .partner-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #bbb;
+            margin: 0 auto 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            user-select: none;
+        }
+
+        .chat-sidebar .partner-name {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .chat-sidebar .partner-status {
+            text-align: center;
+            font-size: 0.9em;
+            color: #4caf50;
+        }
+
+        /* Chat messages area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            position: relative;
+            font-size: 0.95em;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received {
+            background-color: #e4e6eb;
+            color: #050505;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message .timestamp {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.7);
+            position: absolute;
+            bottom: -18px;
+            right: 10px;
+        }
+
+        .message.received .timestamp {
+            color: rgba(0, 0, 0, 0.45);
+            right: auto;
+            left: 10px;
+        }
+
+        /* Message input area */
+        .chat-input-area {
+            border-top: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fafafa;
+        }
+
+        .chat-input-area textarea {
+            flex-grow: 1;
+            resize: none;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            font-size: 1em;
+            font-family: inherit;
+            outline: none;
+            height: 40px;
+            transition: height 0.2s ease;
+        }
+
+        .chat-input-area button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .chat-input-area button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,113 +177,53 @@
     <div th:replace="~{layout/main :: sidebar}"></div>
 
     <div class="main-content">
-        <div class="d-hotline h-btn animated zoomIn faster dn h-open" tabindex="0" role="button"
-            aria-label="Close widget">
-            <div id="chat-icon"></div>
+        <div class="chat-sidebar">
+            <div class="partner-avatar" th:text="${chatPartnerName.substring(0,1).toUpperCase()}">U</div>
+            <div class="partner-name" th:text="${chatPartnerName}">User Name</div>
+            <!-- <div class="partner-status">Online</div> -->
         </div>
-        <div class="hotline-launcher h-open" tabindex="-1" role="dialog">
-            <div class="viewport h-chat-custom h-open">
-                <div class="widget-status animated fadeInUp faster" aria-live="polite">
-                    <div class="help-text dn"></div>
-                </div>
-                <div class="h-conv ember-view">
-                    <div class="fc-conversation-view">
-                        <div class="h-header single-channel-header">
-                            <div class="title fadeIn solid">
-                                <!-- <div class="logo">
-    <img class="animated zoomIn faster" src="/static/images/logo.png" alt="Logo" />
-</div> -->
-                                <div class="channel-info animated fadeIn faster channel-info-compact-width">
-                                    <h1 class="channel-title">Inbox</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="body no-articles single-channel-section">
-                            <div class="h-chat-window">
-                                <div class="cal-picker-maximized hide-cal-picker"></div>
-                                <div class="expand">
-                                    <div class="fc-agent-profile shadow">
-                                        <div class="u-profile-info">
-                                            <div class="user-details agent-section agent-bio">
-                                                <!-- <div class="u-agent-avatar">
-    <span class="avatar-content-wrap agent-circle">
-        <img src="/static/images/user-avatar.jpg"
-            alt="Agent profile picture" />
-    </span>
-</div> -->
-                                                <div class="u-agent-info">
-                                                    <p class="u-agent-name" th:text="${chatPartnerName}">Chat Partner
-                                                    </p>
-                                                    <p class="u-agent-designation">
-                                                        <!-- <img class="designation-icon" src="/static/images/briefcase.svg"
-                                                            alt="Designation icon" />
-                                                        Active now
-                                                    </p> -->
-                                                </div>
-                                            </div>
-                                            <!-- <div class="bio-details">
-                                                <div class="u-agent-bio">
-                                                    <p>Available to chat</p>
-                                                </div>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="h-conv-chat h-theme-bg-1 animated fadeInUp speed scroll-section profile"
-                                    tabindex="0" role="status" aria-live="assertive" aria-relevant="additions"
-                                    aria-atomic="false">
-                                    <ul id="chatMessages" class="fc-app-conversation-message ember-view">
-                                        <li th:each="msg : ${messages}"
-                                            th:classappend="${msg.sender.id == currentUserId} ? 'agent-msg' : 'user-msg'"
-                                            class="fc-ui-message message-container ember-view">
-                                            <div class="h-chat">
-                                                <!-- Profile image removed as per user request -->
-                                                <!-- <div class="agent-pic" aria-hidden="true">
-            <img th:src="@{/static/images/user-avatar.jpg}" alt="User avatar" />
-        </div> -->
-                                                <span class="time"
-                                                    th:text="${#dates.format(msg.createdAt, 'HH:mm')}">12:00</span>
-                                                <div class="h-conv multiple">
-                                                    <div class="h-comment">
-                                                        <div class="fc-ui-unity-message-bubble">
-                                                            <div class="h-message-text" th:text="${msg.content}">Message
-                                                                content</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="h-reply-wrapper">
-                                    <div class="h-reply">
-                                        <div contenteditable="true" id="messageInput"
-                                            class="editable ce-textarea emoji editor-placeholder desktop-browser"
-                                            data-placeholder="Reply here..." placeholder="Reply here..."
-                                            aria-label="Type here to reply and please press enter to send the message"
-                                            tabindex="0"></div>
-                                        <input accept="file" id="fileUploadInput" class="ember-text-field"
-                                            type="file" />
-                                        <a href="#" class="h-reply-attach" role="button" aria-label="File attachment">
-                                            <i class="icons icon-ic_attachment"></i>
-                                        </a>
-                                        <button id="sendButton" class="chat-btn" aria-label="Send message">
-                                            <i class="fa fa-paper-plane"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <span aria-live="assertive" class="aria-live-region">Loading past conversations</span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <div th:each="msg : ${messages}"
+                    th:classappend="${msg.sender.id == currentUserId} ? 'sent' : 'received'" class="message">
+                    <div th:text="${msg.content}">Message content</div>
+                    <div class="timestamp" th:text="${#dates.format(msg.createdAt, 'HH:mm')}">12:00</div>
                 </div>
             </div>
+            <form id="chatForm" class="chat-input-area" enctype="multipart/form-data" onsubmit="return false;">
+                <textarea id="messageInput" name="content" placeholder="Type a message..." rows="1" required></textarea>
+                <input type="file" id="fileUploadInput" name="file" style="display:none;" />
+                <button type="button" id="attachButton" aria-label="Attach file">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button type="button" id="sendButton" aria-label="Send message" onclick="sendMessage()">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
-
     </div>
 
     <div th:replace="~{layout/main :: footer}"></div>
     <div th:replace="~{layout/main :: scripts}"></div>
+
+    <script src="/js/sockjs.min.js"></script>
+    <script src="/js/stomp.min.js"></script>
+    <script src="/js/chat.js"></script>
+    <script>
+        // Auto resize textarea
+        const textarea = document.getElementById('messageInput');
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+
+        // Attach file button
+        const attachButton = document.getElementById('attachButton');
+        const fileInput = document.getElementById('fileUploadInput');
+        attachButton.addEventListener('click', () => {
+            fileInput.click();
+        });
+    </script>
 </body>
 
 </html>

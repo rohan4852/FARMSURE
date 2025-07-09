@@ -23,6 +23,12 @@ public class ContractService {
         return contractRepository.findByMerchant(merchant);
     }
 
+    public List<Contract> getContractsByMerchant(Long merchantId) {
+        User merchant = new User();
+        merchant.setId(merchantId);
+        return contractRepository.findByMerchant(merchant);
+    }
+
     public List<Contract> findByAssignedFarmer(User farmer) {
         return contractRepository.findByAssignedFarmer(farmer);
     }

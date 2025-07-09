@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Reports & Analytics - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="h3 mb-4">Reports & Analytics</h1>
+
+            <div class="row">
+                <!-- Input Usage per Farmer -->
+                <div class="col-xl-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Input Usage per Farmer</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Farmer</th>
+                                        <th>Total Input Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="entry : ${inputUsagePerFarmer}">
+                                        <td th:text="${entry.key.fullName}">Farmer Name</td>
+                                        <td th:text="${entry.value}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Valuation -->
+                <div class="col-xl-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Inventory Valuation</h6>
+                        </div>
+                        <div class="card-body">
+                            <h4 th:text="${inventoryValuation}">$0.00</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Wastage Tracking -->
+                <div class="col-xl-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Wastage Tracking</h6>
+                        </div>
+                        <div class="card-body">
+                            <h4 th:text="${totalWastage}">0</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loss Tracking -->
+                <div class="col-xl-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Loss Tracking</h6>
+                        </div>
+                        <div class="card-body">
+                            <h4 th:text="${totalLoss}">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional analytics and forecasting UI can be added here -->
+
+        </div>
+    </div>
+
+    <div th:replace="~{layout/main :: footer}"></div>
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

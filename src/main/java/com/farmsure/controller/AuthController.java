@@ -3,6 +3,7 @@ package com.farmsure.controller;
 import com.farmsure.model.User;
 import com.farmsure.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -14,7 +15,17 @@ public class AuthController {
     private UserService userService;
 
     @GetMapping("/")
-    public String home() {
+    public String home(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            String role = authentication.getAuthorities().iterator().next().getAuthority();
+            if ("ROLE_FARMER".equals(role)) {
+                return "redirect:/dashboard?type=farmer";
+            } else if ("ROLE_MERCHANT".equals(role)) {
+                return "redirect:/dashboard?type=merchant";
+            } else if ("ROLE_ADMIN".equals(role)) {
+                return "redirect:/admin/dashboard";
+            }
+        }
         return "redirect:/register";
     }
 

@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             <tr th:each="bid : ${bids}">
-                <td th:text="${bid.bidder.name}">Bidder Name</td>
+                <td th:text="${bid.farmer.fullName}">Farmer Name</td>
                 <td th:text="${bid.amount}">Amount</td>
                 <td th:text="${bid.proposal}">Proposal</td>
                 <td>

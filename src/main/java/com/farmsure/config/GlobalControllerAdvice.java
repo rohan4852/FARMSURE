@@ -22,8 +22,13 @@ public class GlobalControllerAdvice {
     public Integer unreadMessages() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
-            User user = userService.findByUsername(auth.getName());
-            return messageService.getUnreadCountForUser(user);
+            java.util.Optional<User> optionalUser = userService.findByUsername(auth.getName());
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                return messageService.getUnreadCountForUser(user);
+            } else {
+                return 0;
+            }
         }
         return 0;
     }
