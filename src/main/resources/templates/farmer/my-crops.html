@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>My Crops - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="container-fluid mt-5 pt-4">
+            <h1 class="h3 mb-4">My Crops</h1>
+            <a th:href="@{/farmer/add-crop}" class="btn btn-primary mb-3">Add New Crop</a>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Crop Name</th>
+                        <th>Quantity</th>
+                        <th>Quality</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.name}">Crop Name</td>
+                        <td th:text="${product.quantity}">Quantity</td>
+                        <td th:text="${product.quality}">Quality</td>
+                        <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd HH:mm')}">Created At</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/main :: footer}"></footer>
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

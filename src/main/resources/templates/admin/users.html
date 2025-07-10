@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Manage Users - Admin - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="container-fluid mt-5 pt-4">
+            <h1 class="h3 mb-4">Manage Users</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.username}">Username</td>
+                        <td th:text="${user.fullName}">Full Name</td>
+                        <td th:text="${user.email}">Email</td>
+                        <td th:text="${user.role}">Role</td>
+                        <td>
+                            <!-- Actions like edit role, delete user can be added here -->
+                            <a th:href="@{'/admin/users/delete/' + ${user.id}}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/main :: footer}"></footer>
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>

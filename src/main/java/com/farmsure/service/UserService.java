@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Implement the required method from UserDetailsService
@@ -58,8 +61,21 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserService.class);
+
     public User registerUser(User user) {
-        // Add registration logic here if needed (e.g., password encoding)
+        logger.info("Registering user with username: " + user.getUsername() + " and role: " + user.getRole());
+        // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        logger.info("Encoded password: " + user.getPassword());
+        return save(user);
+    }
+
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User updateUser(User user) {
         return save(user);
     }
 }

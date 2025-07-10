@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/main :: head}">
+    <title>Loss Recovery Claims - Admin - FarmSure</title>
+</head>
+
+<body>
+    <nav th:replace="~{layout/main :: navbar}"></nav>
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <div class="main-content">
+        <div class="container-fluid mt-5 pt-4">
+            <h1 class="h3 mb-4">Loss Recovery Claims</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Farmer</th>
+                        <th>Merchant</th>
+                        <th>Contract</th>
+                        <th>Loss Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="claim : ${claims}">
+                        <td th:text="${claim.farmer.fullName}">Farmer</td>
+                        <td th:text="${claim.merchant != null ? claim.merchant.fullName : 'N/A'}">Merchant</td>
+                        <td th:text="${claim.contract.id}">Contract</td>
+                        <td th:text="${claim.lossType}">Loss Type</td>
+                        <td th:text="${claim.description}">Description</td>
+                        <td th:text="${claim.status}">Status</td>
+                        <td th:text="${#dates.format(claim.createdAt, 'yyyy-MM-dd HH:mm')}">Created At</td>
+                        <td>
+                            <a th:href="@{'/admin/loss-recovery/approve/' + ${claim.id}}"
+                                class="btn btn-sm btn-success">Approve</a>
+                            <a th:href="@{'/admin/loss-recovery/reject/' + ${claim.id}}"
+                                class="btn btn-sm btn-danger">Reject</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/main :: footer}"></footer>
+    <div th:replace="~{layout/main :: scripts}"></div>
+</body>
+
+</html>
